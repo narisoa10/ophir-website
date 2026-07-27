@@ -1,0 +1,110 @@
+---
+import { siteAssets } from "../../../config/site-assets";
+
+interface Props {
+  content: {
+    eyebrow: string;
+    title: string;
+    assurance: readonly string[];
+  };
+}
+
+const { content } = Astro.props;
+---
+
+<section class="home-hero-section home-how-it-works-section">
+  <div class="home-hero home-how-it-works">
+    <div class="home-hero__inner home-how-it-works__inner">
+      <div class="home-hero__media home-how-it-works__media" aria-hidden="true">
+        <img
+          src={siteAssets.homeHowOphirWorks}
+          alt=""
+          class="home-hero__image home-how-it-works__image"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <div class="home-hero__copy home-how-it-works__copy">
+        <p class="home-how-it-works__eyebrow">
+          {content.eyebrow}
+        </p>
+
+        <h2 class="home-how-it-works__title">
+          {content.title}
+        </h2>
+
+        <div class="home-how-it-works__assurance">
+          {
+            content.assurance.map((line) => (
+              <p class="home-how-it-works__assurance-line">
+                {line}
+              </p>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-how-it-works__inner {
+    align-items: center;
+  }
+
+  .home-how-it-works {
+    background: var(--color-background);
+  }
+
+  .home-how-it-works__copy {
+    width: min(100%, var(--home-hero-copy-max-width));
+    align-self: center;
+    justify-self: center;
+  }
+
+  .home-how-it-works__eyebrow {
+    margin: 0;
+    color: var(--color-primary);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-label);
+    letter-spacing: var(--letter-spacing-label);
+  }
+
+  .home-how-it-works__title {
+    max-width: var(--home-hero-description-max-width);
+    margin: var(--space-4) 0 0;
+    color: var(--home-hero-color-text);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-display);
+    letter-spacing: var(--letter-spacing-display);
+    text-wrap: balance;
+  }
+
+  .home-how-it-works__assurance {
+    margin-top: var(--space-8);
+    color: var(--home-hero-color-muted);
+  }
+
+  .home-how-it-works__assurance-line {
+    margin: 0;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-body-small);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-body-small);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .home-how-it-works__assurance-line + .home-how-it-works__assurance-line {
+    margin-top: var(--space-1);
+  }
+
+  .home-how-it-works__image {
+    border-radius: inherit;
+  }
+
+</style>

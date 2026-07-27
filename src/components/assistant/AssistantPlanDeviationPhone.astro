@@ -1,0 +1,359 @@
+---
+import type { Locale } from "../../i18n/config";
+
+type TextParams<T extends Record<string, string>> = (params: T) => string;
+
+interface AssistantPlanDeviationContent {
+  backLabel: string;
+  infoLabel: string;
+  chartLabel: string;
+  requiredFundIconLabel: string;
+  necessaryFundIconLabel: string;
+  flexibleFundIconLabel: string;
+  savingsFundIconLabel: string;
+  pieChartLabel: string;
+  step: string;
+  title: string;
+  planProgressTitle: TextParams<{ progress: string }>;
+  deviationSubtitleLine1: string;
+  deviationSubtitleLine2: string;
+  amountOf: TextParams<{ actual: string; plan: string }>;
+  projectedOverrun: TextParams<{ amount: string }>;
+  summaryLead: TextParams<{ share: string }>;
+  summaryBody: string;
+  incomeOnPlan: string;
+  funds: {
+    requiredTitle: string;
+    necessaryTitle: string;
+    flexibleTitle: string;
+    savingsTitle: string;
+    withinPlanStatus: string;
+    noChangesStatus: string;
+  };
+}
+
+interface Props {
+  locale: Locale;
+  content: AssistantPlanDeviationContent;
+}
+
+interface DeviationFundData {
+  title: string;
+  iconLabel: string;
+  icon: "home" | "cart" | "gamepad" | "target";
+  tone: "green" | "orange" | "red";
+  actual: number;
+  plan: number;
+  progress: number;
+  status: string;
+  isOverrun?: boolean;
+}
+
+interface AssistantPlanDeviationData {
+  currencyCode: string;
+  planProgress: number;
+  projectedOverrun: number;
+  shortfallShare: number;
+}
+
+const { locale, content } = Astro.props;
+
+const mockupData: AssistantPlanDeviationData = {
+  currencyCode: "CAD",
+  planProgress: 0.81,
+  projectedOverrun: 520,
+  shortfallShare: 0.82,
+};
+
+const numberFormatter = new Intl.NumberFormat(locale, {
+  maximumFractionDigits: 0,
+});
+
+const percentFormatter = new Intl.NumberFormat(locale, {
+  style: "percent",
+  maximumFractionDigits: 0,
+});
+
+const formatNumber = (value: number) => numberFormatter.format(value);
+const formatMoney = (value: number) =>
+  `${formatNumber(value)} ${mockupData.currencyCode}`;
+const formatPercent = (value: number) => percentFormatter.format(value);
+
+const funds: DeviationFundData[] = [
+  {
+    title: content.funds.requiredTitle,
+    iconLabel: content.requiredFundIconLabel,
+    icon: "home",
+    tone: "green",
+    actual: 2050,
+    plan: 2100,
+    progress: 0.98,
+    status: content.funds.withinPlanStatus,
+  },
+  {
+    title: content.funds.necessaryTitle,
+    iconLabel: content.necessaryFundIconLabel,
+    icon: "cart",
+    tone: "orange",
+    actual: 620,
+    plan: 900,
+    progress: 0.69,
+    status: content.funds.withinPlanStatus,
+  },
+  {
+    title: content.funds.flexibleTitle,
+    iconLabel: content.flexibleFundIconLabel,
+    icon: "gamepad",
+    tone: "red",
+    actual: 380,
+    plan: 500,
+    progress: 0.76,
+    status: content.projectedOverrun({
+      amount: formatMoney(mockupData.projectedOverrun),
+    }),
+    isOverrun: true,
+  },
+  {
+    title: content.funds.savingsTitle,
+    iconLabel: content.savingsFundIconLabel,
+    icon: "target",
+    tone: "green",
+    actual: 0,
+    plan: 200,
+    progress: 0,
+    status: content.funds.noChangesStatus,
+  },
+];
+
+const toneStyles = {
+  green: {
+    shell: "bg-[#edf9eb]",
+    icon: "text-[#139b32]",
+    percent: "text-[#129d32]",
+    status: "text-[#071044]",
+  },
+  orange: {
+    shell: "bg-[#fff2e8]",
+    icon: "text-[#ff6a00]",
+    percent: "text-[#ff6a00]",
+    status: "text-[#071044]",
+  },
+  red: {
+    shell: "bg-[#fff0f2]",
+    icon: "text-[#e4161d]",
+    percent: "text-[#e4161d]",
+    status: "text-[#e4161d]",
+  },
+};
+---
+
+<div class="h-[390px] w-[190px] overflow-hidden max-[190px]:h-[calc(390px*var(--assistant-phone-scale))] max-[190px]:w-[calc(190px*var(--assistant-phone-scale))] max-[190px]:[--assistant-phone-scale:calc(100vw/190)]">
+  <figure
+    class="relative h-[390px] max-h-[390px] min-h-0 w-[190px] min-w-0 max-w-[190px] shrink-0 rounded-[25px] bg-[#10131b] p-1 shadow-[0_14px_30px_rgba(15,23,42,0.22)] max-[190px]:origin-top-left max-[190px]:[transform:scale(var(--assistant-phone-scale))]"
+    aria-label={content.title}
+  >
+    <div class="relative h-full w-full overflow-hidden rounded-[21px] bg-white">
+      <div class="flex h-full flex-col px-3.5 pb-2 pt-2 text-[#071044]">
+        <section class="flex h-[48px] shrink-0 items-center gap-3 rounded-[7px] bg-[#f5f7ff] px-2.5">
+          <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full border border-[#a9bcff] text-[#4c78ff]">
+            <svg
+              class="size-[15px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              role="img"
+              aria-label={content.chartLabel}
+            >
+              <path d="M7 17v-5"></path>
+              <path d="M12 17V7"></path>
+              <path d="M17 17v-7"></path>
+            </svg>
+          </div>
+
+          <div class="min-w-0">
+            <p class="text-[9px] font-bold leading-tight text-[#071044]">
+              {
+                content.planProgressTitle({
+                  progress: formatPercent(mockupData.planProgress),
+                })
+              }
+            </p>
+            <p class="mt-1 text-[8px] font-medium leading-snug text-[#071044]">
+              {content.deviationSubtitleLine1}
+            </p>
+            <p class="mt-0.5 text-[8px] font-medium leading-snug text-[#071044]">
+              {content.deviationSubtitleLine2}
+            </p>
+          </div>
+        </section>
+
+        <section class="mt-2 overflow-hidden rounded-[7px] border border-[#edf0f5] bg-white">
+          {
+            funds.map((fund) => (
+              <article class="grid min-h-[50px] grid-cols-[30px_minmax(0,1fr)_auto_8px] items-center gap-2 border-b border-[#edf0f5] px-2 py-1 last:border-b-0">
+                <div class={`flex size-[27px] items-center justify-center rounded-full ${toneStyles[fund.tone].shell} ${toneStyles[fund.tone].icon}`}>
+                  {
+                    fund.icon === "home" && (
+                      <svg
+                        class="size-[16px]"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        role="img"
+                        aria-label={fund.iconLabel}
+                      >
+                        <path d="m4 11 8-7 8 7"></path>
+                        <path d="M6 10v9h12v-9"></path>
+                        <path d="M10 19v-5h4v5"></path>
+                        <path d="M17 7v4"></path>
+                      </svg>
+                    )
+                  }
+                  {
+                    fund.icon === "cart" && (
+                      <svg
+                        class="size-[16px]"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        role="img"
+                        aria-label={fund.iconLabel}
+                      >
+                        <path d="M4 5h3l2 10h9l2-7H8"></path>
+                        <circle cx="10" cy="19" r="1.5"></circle>
+                        <circle cx="17" cy="19" r="1.5"></circle>
+                      </svg>
+                    )
+                  }
+                  {
+                    fund.icon === "gamepad" && (
+                      <svg
+                        class="size-[16px]"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        role="img"
+                        aria-label={fund.iconLabel}
+                      >
+                        <path d="M7 9h10a3 3 0 0 1 2.9 2.25l1 4A3 3 0 0 1 18 19l-2-3H8l-2 3a3 3 0 0 1-2.9-3.75l1-4A3 3 0 0 1 7 9Z"></path>
+                        <path d="M8 12v3"></path>
+                        <path d="M6.5 13.5h3"></path>
+                        <path d="M15.5 12.5h.01"></path>
+                        <path d="M18 14.5h.01"></path>
+                      </svg>
+                    )
+                  }
+                  {
+                    fund.icon === "target" && (
+                      <svg
+                        class="size-[16px]"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        role="img"
+                        aria-label={fund.iconLabel}
+                      >
+                        <circle cx="11" cy="13" r="7"></circle>
+                        <circle cx="11" cy="13" r="3"></circle>
+                        <path d="m14 10 6-6"></path>
+                        <path d="M17 4h3v3"></path>
+                      </svg>
+                    )
+                  }
+                </div>
+
+                <div class="min-w-0">
+                  <h3 class="text-[8px] font-bold leading-tight text-[#071044]">
+                    {fund.title}
+                  </h3>
+                  <p class="mt-0.5 text-[8px] font-medium leading-tight text-[#071044]">
+                    {
+                      content.amountOf({
+                        actual: formatNumber(fund.actual),
+                        plan: formatMoney(fund.plan),
+                      })
+                    }
+                  </p>
+                  <p class={`mt-0.5 text-[7px] font-medium leading-tight ${fund.isOverrun ? toneStyles.red.status : toneStyles[fund.tone].status}`}>
+                    {fund.status}
+                  </p>
+                </div>
+
+                <p class={`text-[8px] font-bold leading-tight ${toneStyles[fund.tone].percent}`}>
+                  {formatPercent(fund.progress)}
+                </p>
+
+                <svg
+                  class="size-[8px] text-[#1a2b5f]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m9 18 6-6-6-6"></path>
+                </svg>
+              </article>
+            ))
+          }
+        </section>
+
+        <aside class="mt-2 flex min-h-[68px] shrink-0 items-center gap-2.5 rounded-[7px] bg-[#fff2f2] px-2.5 py-1.5">
+          <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full border border-[#ffb8bd] text-[#e4161d]">
+            <svg
+              class="size-[16px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              role="img"
+              aria-label={content.pieChartLabel}
+            >
+              <path d="M11 4a8 8 0 1 0 8 8h-8Z"></path>
+              <path d="M13 4v7h7"></path>
+            </svg>
+          </div>
+
+          <div class="min-w-0 text-[8px] font-medium leading-tight text-[#071044]">
+            <p>
+              <span class="font-bold">
+                {
+                  content.summaryLead({
+                    share: formatPercent(mockupData.shortfallShare),
+                  })
+                }
+              </span>
+            </p>
+            <p class="mt-0.5">{content.summaryBody}</p>
+            <p class="mt-1">{content.incomeOnPlan}</p>
+          </div>
+        </aside>
+
+        <div
+          class="mx-auto mt-auto h-[2px] w-[58px] shrink-0 rounded-full bg-[#071044]"
+          aria-hidden="true"
+        >
+        </div>
+      </div>
+    </div>
+  </figure>
+</div>

@@ -1,0 +1,173 @@
+---
+const marqueeItems = [
+  {
+    icon: "chart",
+    text: "Видьте полную картину своих финансов",
+  },
+  {
+    icon: "calendar",
+    text: "Планируйте бюджет заранее",
+  },
+  {
+    icon: "shield-alert",
+    text: "Предотвращайте финансовые трудности",
+  },
+  {
+    icon: "shield-check",
+    text: "Чувствуйте спокойствие и уверенность в будущем",
+  },
+] as const;
+---
+
+<section class="transition-marquee home-hero-section" aria-label="Ключевые возможности OPHIR">
+  <div class="transition-marquee__viewport">
+    <div class="transition-marquee__track">
+      {
+        [0, 1].map((sequenceIndex) => (
+          <div
+            class="transition-marquee__sequence"
+            aria-hidden={sequenceIndex === 0 ? undefined : "true"}
+          >
+            {marqueeItems.map((item) => (
+              <div class="transition-marquee__item">
+                <svg
+                  class="transition-marquee__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  {item.icon === "chart" && (
+                    <>
+                      <path d="M4 19V5"></path>
+                      <path d="M4 19h16"></path>
+                      <path d="m7 15 4-4 3 3 5-7"></path>
+                      <path d="M16 7h3v3"></path>
+                    </>
+                  )}
+
+                  {item.icon === "calendar" && (
+                    <>
+                      <rect x="4" y="5" width="16" height="15" rx="2"></rect>
+                      <path d="M8 3v4"></path>
+                      <path d="M16 3v4"></path>
+                      <path d="M4 10h16"></path>
+                      <path d="m9 15 2 2 4-4"></path>
+                    </>
+                  )}
+
+                  {item.icon === "shield-alert" && (
+                    <>
+                      <path d="M12 3 19 6v5c0 4.5-2.8 8.5-7 10-4.2-1.5-7-5.5-7-10V6l7-3Z"></path>
+                      <path d="M12 8v5"></path>
+                      <path d="M12 16h.01"></path>
+                    </>
+                  )}
+
+                  {item.icon === "shield-check" && (
+                    <>
+                      <path d="M12 3 19 6v5c0 4.5-2.8 8.5-7 10-4.2-1.5-7-5.5-7-10V6l7-3Z"></path>
+                      <path d="m9 12 2 2 4-4"></path>
+                    </>
+                  )}
+                </svg>
+
+                <span>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .transition-marquee {
+    --transition-marquee-duration: 34s;
+    --transition-marquee-gap: var(--space-16);
+
+    padding-block: var(--space-6);
+    margin-block: 0;
+    overflow: hidden;
+  }
+
+  .transition-marquee__viewport {
+    overflow: hidden;
+  }
+
+  .transition-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: transition-marquee-scroll var(--transition-marquee-duration)
+      linear infinite;
+    will-change: transform;
+  }
+
+  .transition-marquee__sequence {
+    display: flex;
+    width: max-content;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--transition-marquee-gap);
+    padding-right: var(--transition-marquee-gap);
+  }
+
+  .transition-marquee__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-primary);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-body-large);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-body-large);
+    letter-spacing: var(--letter-spacing-body);
+    white-space: nowrap;
+  }
+
+  .transition-marquee__icon {
+    width: 1.25em;
+    height: 1.25em;
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 720px) {
+    .transition-marquee {
+      --transition-marquee-gap: var(--space-12);
+
+      padding-block: var(--space-5);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .transition-marquee__track {
+      width: auto;
+      animation: none;
+    }
+
+    .transition-marquee__sequence {
+      width: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: var(--space-4);
+    }
+
+    .transition-marquee__sequence[aria-hidden="true"] {
+      display: none;
+    }
+  }
+
+  @keyframes transition-marquee-scroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+</style>

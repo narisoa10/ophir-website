@@ -1,0 +1,139 @@
+---
+import "../styles/global.css";
+
+import { siteConfig } from "../config/site";
+import { locales, type Locale } from "../i18n/config";
+import { getTranslations } from "../i18n/translations";
+
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+}
+
+const {
+  locale,
+  title = siteConfig.title,
+  description = siteConfig.description,
+} = Astro.props;
+
+const canonicalUrl = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site)
+  : Astro.url;
+
+const t = getTranslations(locale);
+const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
+const routeSegments = locales.includes(pathSegments[0] as Locale)
+  ? pathSegments.slice(1)
+  : pathSegments;
+const localizedRoutePath = routeSegments.length
+  ? `${routeSegments.join("/")}/`
+  : "";
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+
+    <script is:inline>
+      (() => {
+        const storageKey = "ophir-theme";
+        const root = document.documentElement;
+
+        let theme;
+
+        try {
+          const storedTheme = localStorage.getItem(storageKey);
+
+          if (storedTheme === "light" || storedTheme === "dark") {
+            theme = storedTheme;
+          }
+        } catch {
+          theme = undefined;
+        }
+
+        if (!theme) {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+
+        root.dataset.theme = theme;
+        root.style.colorScheme = theme;
+      })();
+    </script>
+
+    <title>{title}</title>
+
+    <meta
+      name="description"
+      content={description}
+    />
+
+    <link
+      rel="canonical"
+      href={canonicalUrl}
+    />
+
+    <link
+      rel="alternate"
+      hreflang="en"
+      href={new URL(`/en/${localizedRoutePath}`, siteConfig.siteUrl)}
+    />
+
+    <link
+      rel="alternate"
+      hreflang="fr"
+      href={new URL(`/fr/${localizedRoutePath}`, siteConfig.siteUrl)}
+    />
+
+    <link
+      rel="alternate"
+      hreflang="ru"
+      href={new URL(`/ru/${localizedRoutePath}`, siteConfig.siteUrl)}
+    />
+
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(`/en/${localizedRoutePath}`, siteConfig.siteUrl)}
+    />
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg"
+    />
+
+    <link
+      rel="icon"
+      href="/favicon.ico"
+    />
+
+    <meta
+      name="generator"
+      content={Astro.generator}
+    />
+  </head>
+
+  <body>
+    <div class="site-shell">
+      <Header locale={locale} />
+
+      <main class="site-shell__main">
+        <slot />
+      </main>
+
+      <Footer locale={locale} content={t.footer} />
+    </div>
+  </body>
+</html>

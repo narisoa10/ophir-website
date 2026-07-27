@@ -1,0 +1,18 @@
+---
+interface Props {
+  class?: string;
+  label: string;
+}
+
+const { class: className = "", label } = Astro.props;
+---
+
+<img
+  src="/brand/ophir-logo.svg"
+  alt={label}
+  class={`ophir-logo ${className}`}
+  width="398"
+  height="102"
+  loading="eager"
+  decoding="async"
+/>

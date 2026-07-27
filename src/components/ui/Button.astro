@@ -1,0 +1,103 @@
+---
+interface Props {
+  href?: string;
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
+  type?: "button" | "submit" | "reset";
+  class?: string;
+  ariaLabel?: string;
+  disabled?: boolean;
+}
+
+const {
+  href,
+  variant = "primary",
+  size = "md",
+  type = "button",
+  class: className = "",
+  ariaLabel,
+  disabled = false,
+} = Astro.props;
+
+const baseClasses = [
+  "inline-flex",
+  "items-center",
+  "justify-center",
+  "gap-2",
+  "rounded-xl",
+  "font-medium",
+  "transition-colors",
+  "duration-200",
+  "focus-visible:outline-none",
+  "focus-visible:ring-2",
+  "focus-visible:ring-[var(--color-primary)]",
+  "focus-visible:ring-offset-2",
+  "focus-visible:ring-offset-[var(--color-background)]",
+].join(" ");
+
+const variantClasses = {
+  primary: [
+    "bg-[var(--color-primary)]",
+    "text-white",
+    "hover:bg-[var(--color-primary-hover)]",
+  ].join(" "),
+
+  secondary: [
+    "border",
+    "border-[var(--color-border)]",
+    "bg-[var(--color-surface)]",
+    "text-[var(--color-text)]",
+    "hover:bg-[var(--color-border)]",
+  ].join(" "),
+
+  ghost: [
+    "bg-transparent",
+    "text-[var(--color-text-secondary)]",
+    "hover:bg-[var(--color-surface)]",
+    "hover:text-[var(--color-text)]",
+  ].join(" "),
+};
+
+const sizeClasses = {
+  sm: "min-h-9 px-4 py-2 text-sm",
+  md: "min-h-11 px-5 py-2.5 text-sm",
+  lg: "min-h-13 px-6 py-3 text-base",
+};
+
+const disabledClasses = disabled
+  ? "pointer-events-none cursor-not-allowed opacity-50"
+  : "";
+
+const classes = [
+  baseClasses,
+  variantClasses[variant],
+  sizeClasses[size],
+  disabledClasses,
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class={classes}
+      aria-label={ariaLabel}
+      aria-disabled={disabled ? "true" : undefined}
+      tabindex={disabled ? -1 : undefined}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button
+      type={type}
+      class={classes}
+      aria-label={ariaLabel}
+      disabled={disabled}
+    >
+      <slot />
+    </button>
+  )
+}

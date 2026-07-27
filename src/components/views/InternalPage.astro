@@ -1,0 +1,141 @@
+---
+import type { InternalPageKey } from "../../config/site-routes";
+import { siteConfig } from "../../config/site";
+import type { Locale } from "../../i18n/config";
+import { getTranslations } from "../../i18n/translations";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../layout/Container.astro";
+
+interface Props {
+  locale: Locale;
+  pageKey: InternalPageKey;
+}
+
+const { locale, pageKey } = Astro.props;
+const t = getTranslations(locale);
+const page = t.pages[pageKey];
+
+interface DocumentSection {
+  key: string;
+  title: string;
+  paragraphs?: readonly string[];
+  blocks?: readonly DocumentBlock[];
+}
+
+type DocumentBlock =
+  | {
+      type: "paragraph";
+      text: string;
+    }
+  | {
+      type: "list";
+      items: readonly string[];
+    }
+  | {
+      type: "email";
+      label: string;
+      email: string;
+    };
+
+interface DocumentPage {
+  title: string;
+  seoTitle?: string;
+  description?: string;
+  updatedLabel?: string;
+  updated?: string;
+  updatedDate?: string;
+  sections?: readonly DocumentSection[];
+}
+
+const documentPage = page as DocumentPage;
+const pageTitle =
+  documentPage.seoTitle ?? `${documentPage.title} | ${siteConfig.name}`;
+const pageDescription = documentPage.description ?? siteConfig.description;
+---
+
+<BaseLayout
+  locale={locale}
+  title={pageTitle}
+  description={pageDescription}
+>
+  <section
+    class:list={[
+      "internal-page",
+      documentPage.sections && "internal-page--document",
+    ]}
+    aria-labelledby={`internal-page-${pageKey}`}
+  >
+    <Container class="internal-page__container">
+      <div class="internal-page__content">
+        <h1 id={`internal-page-${pageKey}`} class="internal-page__title">
+          {documentPage.title}
+        </h1>
+
+        {
+          documentPage.description && (
+            <p class="internal-page__description">
+              {documentPage.description}
+            </p>
+          )
+        }
+
+        {
+          documentPage.updatedLabel && documentPage.updated && (
+            <p class="internal-page__updated">
+              <span>{documentPage.updatedLabel}</span>
+              {documentPage.updatedDate ? (
+                <time datetime={documentPage.updatedDate}>
+                  {documentPage.updated}
+                </time>
+              ) : (
+                documentPage.updated
+              )}
+            </p>
+          )
+        }
+
+        {
+          documentPage.sections && (
+            <article class="internal-page__document">
+              {documentPage.sections.map((section) => (
+                <section
+                  id={`${pageKey}-${section.key}`}
+                  class="internal-page__section"
+                >
+                  <h2>{section.title}</h2>
+
+                  {section.paragraphs?.map((paragraph) => (
+                    <p>{paragraph}</p>
+                  ))}
+
+                  {section.blocks?.map((block) => {
+                    if (block.type === "paragraph") {
+                      return <p>{block.text}</p>;
+                    }
+
+                    if (block.type === "list") {
+                      return (
+                        <ul class="internal-page__list">
+                          {block.items.map((item) => (
+                            <li>{item}</li>
+                          ))}
+                        </ul>
+                      );
+                    }
+
+                    return (
+                      <p>
+                        {block.label}{" "}
+                        <a href={`mailto:${block.email}`}>{block.email}</a>
+                      </p>
+                    );
+                  })}
+                </section>
+              ))}
+            </article>
+          )
+        }
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

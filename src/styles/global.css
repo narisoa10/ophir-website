@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@import "./theme.css";
+@import "./typography.css";
+@import "./components/header.css";
+@import "./components/footer.css";
+@import "./components/internal-page.css";
+@import "./components/logo.css";
+@import "./sections/home/home-hero.css";
+
+html {
+  min-width: 320px;
+
+  background: var(--color-background);
+  color: var(--color-text);
+
+  font-family: var(--font-family-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  background: var(--color-background);
+  color: var(--color-text);
+
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+.site-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-shell__main {
+  flex: 1 0 auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  display: block;
+}

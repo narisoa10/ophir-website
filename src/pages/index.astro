@@ -1,0 +1,49 @@
+---
+import { defaultLocale } from "../i18n/config";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+
+    <meta
+      name="robots"
+      content="noindex"
+    />
+
+    <title>OPHIR</title>
+
+    <script>
+      import { getPreferredLocaleFromBrowserLanguages } from "../i18n/locale-detection";
+
+      (() => {
+        const locale = getPreferredLocaleFromBrowserLanguages(
+          navigator.languages,
+          navigator.language
+        );
+        const destination = `/${locale}/`;
+
+        window.location.replace(destination);
+      })();
+    </script>
+
+    <noscript>
+      <meta
+        http-equiv="refresh"
+        content={`0;url=/${defaultLocale}/`}
+      />
+    </noscript>
+  </head>
+
+  <body>
+    <p>
+      <a href={`/${defaultLocale}/`}>Continue to OPHIR</a>
+    </p>
+  </body>
+</html>

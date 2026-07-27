@@ -1,0 +1,291 @@
+---
+import type { Locale } from "../../i18n/config";
+
+type TextParams<T extends Record<string, string>> = (params: T) => string;
+
+interface AssistantRecommendedActionsContent {
+  backLabel: string;
+  infoLabel: string;
+  calendarIconLabel: string;
+  pieChartIconLabel: string;
+  shoppingBagIconLabel: string;
+  cupIconLabel: string;
+  shieldIconLabel: string;
+  checkIconLabel: string;
+  step: string;
+  title: string;
+  daysRemainingLabel: string;
+  daysRemainingValue: TextParams<{ days: string }>;
+  goalLabel: string;
+  recommendedActionsTitle: string;
+  limitFlexibleTitle: string;
+  limitFlexibleBeforeAmount: string;
+  limitFlexibleAfterAmount: string;
+  postponePurchasesTitle: string;
+  postponePurchasesDescription: string;
+  reduceOptionalTitle: string;
+  reduceOptionalLine1: string;
+  reduceOptionalLine2: TextParams<{ range: string }>;
+  requiredPaymentsTitle: string;
+  requiredPaymentsLine1: string;
+  requiredPaymentsLine2: string;
+  successTitle: string;
+  successDescription: string;
+}
+
+interface Props {
+  locale: Locale;
+  content: AssistantRecommendedActionsContent;
+}
+
+interface RecommendedActionsData {
+  currencyCode: string;
+  daysUntilPaycheck: number;
+  flexibleSpendLimit: number;
+  weeklyReductionMin: number;
+  weeklyReductionMax: number;
+}
+
+const { locale, content } = Astro.props;
+
+const mockupData: RecommendedActionsData = {
+  currencyCode: "CAD",
+  daysUntilPaycheck: 20,
+  flexibleSpendLimit: 180,
+  weeklyReductionMin: 40,
+  weeklyReductionMax: 60,
+};
+
+const numberFormatter = new Intl.NumberFormat(locale, {
+  maximumFractionDigits: 0,
+});
+
+const formatNumber = (value: number) => numberFormatter.format(value);
+const formatMoney = (value: number) =>
+  `${formatNumber(value)} ${mockupData.currencyCode}`;
+const formatMoneyRange = (min: number, max: number) =>
+  `${formatNumber(min)}–${formatNumber(max)} ${mockupData.currencyCode}`;
+---
+
+<div class="h-[390px] w-[190px] overflow-hidden max-[190px]:h-[calc(390px*var(--assistant-phone-scale))] max-[190px]:w-[calc(190px*var(--assistant-phone-scale))] max-[190px]:[--assistant-phone-scale:calc(100vw/190)]">
+  <figure
+    class="relative h-[390px] max-h-[390px] min-h-0 w-[190px] min-w-0 max-w-[190px] shrink-0 rounded-[25px] bg-[#10131b] p-1 shadow-[0_14px_30px_rgba(15,23,42,0.22)] max-[190px]:origin-top-left max-[190px]:[transform:scale(var(--assistant-phone-scale))]"
+    aria-label={content.title}
+  >
+    <div class="relative h-full w-full overflow-hidden rounded-[21px] bg-white">
+      <div class="flex h-full flex-col px-3.5 pb-2 pt-2 text-[#071044]">
+        <section class="flex h-[46px] shrink-0 items-center gap-3 rounded-[7px] bg-[#f5f7ff] px-2.5">
+          <div class="flex size-[28px] shrink-0 items-center justify-center rounded-full bg-[#eef2ff] text-[#4b72ff]">
+            <svg
+              class="size-[16px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              role="img"
+              aria-label={content.calendarIconLabel}
+            >
+              <rect x="5" y="5" width="14" height="15" rx="2"></rect>
+              <path d="M8 3v4"></path>
+              <path d="M16 3v4"></path>
+              <path d="M5 10h14"></path>
+              <path d="m10 15 2 2 3-4"></path>
+            </svg>
+          </div>
+
+          <div class="min-w-0">
+            <p class="text-[8px] font-medium leading-tight text-[#071044]">
+              {content.daysRemainingLabel}
+            </p>
+            <p class="mt-0.5 text-[15px] font-bold leading-none text-[#071044]">
+              {
+                content.daysRemainingValue({
+                  days: formatNumber(mockupData.daysUntilPaycheck),
+                })
+              }
+            </p>
+            <p class="mt-1 text-[8px] font-medium leading-tight text-[#071044]">
+              {content.goalLabel}
+            </p>
+          </div>
+        </section>
+
+        <h3 class="mt-2.5 shrink-0 text-[9px] font-bold leading-tight text-[#071044]">
+          {content.recommendedActionsTitle}
+        </h3>
+
+        <section class="mt-1.5 grid shrink-0 gap-1">
+          <article class="flex min-h-[48px] items-center gap-2.5 rounded-[7px] border border-[#edf0f5] bg-white px-2.5 py-1.5">
+            <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full bg-[#fff0f2] text-[#ef2332]">
+              <svg
+                class="size-[16px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                role="img"
+                aria-label={content.pieChartIconLabel}
+              >
+                <path d="M11 4a8 8 0 1 0 8 8h-8Z"></path>
+                <path d="M13 4v7h7"></path>
+              </svg>
+            </div>
+
+            <div class="min-w-0">
+              <p class="text-[7px] font-bold leading-tight text-[#071044]">
+                {content.limitFlexibleTitle}
+              </p>
+              <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+                {content.limitFlexibleBeforeAmount}
+                <span class="text-[#ef2332]">
+                  {formatMoney(mockupData.flexibleSpendLimit)}
+                </span>
+              </p>
+              <p class="text-[7px] font-medium leading-tight text-[#071044]">
+                {content.limitFlexibleAfterAmount}
+              </p>
+            </div>
+          </article>
+
+          <article class="flex min-h-[48px] items-center gap-2.5 rounded-[7px] border border-[#edf0f5] bg-white px-2.5 py-1.5">
+            <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full bg-[#fff3e8] text-[#f58200]">
+              <svg
+                class="size-[16px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                role="img"
+                aria-label={content.shoppingBagIconLabel}
+              >
+                <path d="M6 8h12l-1 12H7Z"></path>
+                <path d="M9 8a3 3 0 0 1 6 0"></path>
+              </svg>
+            </div>
+
+            <div class="min-w-0">
+              <p class="text-[7px] font-bold leading-tight text-[#071044]">
+                {content.postponePurchasesTitle}
+              </p>
+              <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+                {content.postponePurchasesDescription}
+              </p>
+            </div>
+          </article>
+
+          <article class="flex min-h-[48px] items-center gap-2.5 rounded-[7px] border border-[#edf0f5] bg-white px-2.5 py-1.5">
+            <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full bg-[#f7ecff] text-[#8536c8]">
+              <svg
+                class="size-[16px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                role="img"
+                aria-label={content.cupIconLabel}
+              >
+                <path d="M6 8h10v5a5 5 0 0 1-10 0Z"></path>
+                <path d="M16 10h2a2 2 0 0 1 0 4h-2"></path>
+                <path d="M6 19h10"></path>
+                <path d="M8 4v1"></path>
+                <path d="M12 4v1"></path>
+                <path d="M16 4v1"></path>
+              </svg>
+            </div>
+
+            <div class="min-w-0">
+              <p class="text-[7px] font-bold leading-tight text-[#071044]">
+                {content.reduceOptionalTitle}
+              </p>
+              <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+                {content.reduceOptionalLine1}
+              </p>
+              <p class="text-[7px] font-medium leading-tight text-[#071044]">
+                {
+                  content.reduceOptionalLine2({
+                    range: formatMoneyRange(
+                      mockupData.weeklyReductionMin,
+                      mockupData.weeklyReductionMax,
+                    ),
+                  })
+                }
+              </p>
+            </div>
+          </article>
+
+          <article class="flex min-h-[48px] items-center gap-2.5 rounded-[7px] border border-[#edf0f5] bg-white px-2.5 py-1.5">
+            <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full bg-[#edf9eb] text-[#139b32]">
+              <svg
+                class="size-[16px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                role="img"
+                aria-label={content.shieldIconLabel}
+              >
+                <path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6Z"></path>
+                <path d="m9 12 2 2 4-5"></path>
+              </svg>
+            </div>
+
+            <div class="min-w-0">
+              <p class="text-[7px] font-bold leading-tight text-[#071044]">
+                {content.requiredPaymentsTitle}
+              </p>
+              <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+                {content.requiredPaymentsLine1}
+              </p>
+              <p class="text-[7px] font-medium leading-tight text-[#071044]">
+                {content.requiredPaymentsLine2}
+              </p>
+            </div>
+          </article>
+        </section>
+
+        <aside class="mt-1.5 flex min-h-[58px] shrink-0 items-center gap-2.5 rounded-[7px] bg-[#f0f8f1] px-2.5 py-1.5">
+          <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full border border-[#b8e2bd] text-[#0aa044]">
+            <svg
+              class="size-[16px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              role="img"
+              aria-label={content.checkIconLabel}
+            >
+              <path d="m6 12 4 4 8-9"></path>
+            </svg>
+          </div>
+
+          <div class="min-w-0">
+            <p class="text-[7px] font-bold leading-tight text-[#0d5a2a]">
+              {content.successTitle}
+            </p>
+            <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+              {content.successDescription}
+            </p>
+          </div>
+        </aside>
+
+        <div
+          class="mx-auto mt-auto h-[2px] w-[58px] shrink-0 rounded-full bg-[#071044]"
+          aria-hidden="true"
+        >
+        </div>
+      </div>
+    </div>
+  </figure>
+</div>

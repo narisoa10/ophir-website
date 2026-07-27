@@ -1,0 +1,71 @@
+---
+import type { Locale } from "../../i18n/config";
+import { getTranslations } from "../../i18n/translations";
+import { primaryNavigationItems } from "../../config/site-navigation";
+import { getLocalizedHomeSectionHref } from "../../config/site-routes";
+
+import OphirLogo from "../brand/OphirLogo.astro";
+import Container from "./Container.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const navigationItems = primaryNavigationItems.map((item) => ({
+  ...item,
+  href: getLocalizedHomeSectionHref(locale, item.section),
+  label: t.navigation[item.key],
+}));
+---
+
+<header class="site-header">
+  <Container class="site-header__inner">
+    <a
+      href="/"
+      class="site-header__brand"
+      aria-label={t.navigation.homeLabel}
+    >
+      <OphirLogo
+        label={t.navigation.homeLabel}
+        class="site-header__logo"
+      />
+    </a>
+
+    <nav
+      class="site-header__navigation"
+      aria-label={t.navigation.primaryLabel}
+    >
+      {
+        navigationItems.map((item) => (
+          <a
+            href={item.href}
+            class="site-header__link text-navigation"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <details class="site-header__menu">
+      <summary class="site-header__menu-summary text-navigation">
+        {t.navigation.menu}
+      </summary>
+
+      <div class="site-header__menu-panel">
+        {
+          navigationItems.map((item) => (
+            <a
+              href={item.href}
+              class="site-header__menu-link text-navigation"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+    </details>
+  </Container>
+</header>

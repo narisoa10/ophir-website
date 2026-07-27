@@ -1,0 +1,137 @@
+---
+interface Props {
+  labels: {
+    switchToDark: string;
+    switchToLight: string;
+  };
+}
+
+const { labels } = Astro.props;
+---
+
+<button
+  type="button"
+  class="theme-toggle inline-flex size-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] transition-colors hover:bg-[var(--color-border)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
+  aria-label={labels.switchToDark}
+  aria-pressed="false"
+  title={labels.switchToDark}
+  data-label-dark={labels.switchToDark}
+  data-label-light={labels.switchToLight}
+>
+  <svg
+    class="theme-toggle__moon size-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79"></path>
+  </svg>
+
+  <svg
+    class="theme-toggle__sun hidden size-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.42 1.42"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.42"></path>
+  </svg>
+</button>
+
+<script>
+  const storageKey = "ophir-theme";
+
+  type Theme = "light" | "dark";
+
+  function getCurrentTheme(): Theme {
+    return document.documentElement.dataset.theme === "dark"
+      ? "dark"
+      : "light";
+  }
+
+  function applyTheme(theme: Theme): void {
+    const root = document.documentElement;
+
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+
+    try {
+      localStorage.setItem(storageKey, theme);
+    } catch {
+      // Theme still works when localStorage is unavailable.
+    }
+
+    document
+      .querySelectorAll<HTMLButtonElement>(".theme-toggle")
+      .forEach((button) => {
+        const isDark = theme === "dark";
+        const moonIcon =
+          button.querySelector<SVGElement>(".theme-toggle__moon");
+        const sunIcon =
+          button.querySelector<SVGElement>(".theme-toggle__sun");
+
+        moonIcon?.classList.toggle("hidden", isDark);
+        sunIcon?.classList.toggle("hidden", !isDark);
+
+        button.setAttribute("aria-pressed", String(isDark));
+
+        const label = isDark
+          ? button.dataset.labelLight
+          : button.dataset.labelDark;
+
+        if (label) {
+          button.setAttribute("aria-label", label);
+          button.setAttribute("title", label);
+        }
+      });
+  }
+
+  function initializeThemeToggle(): void {
+    applyTheme(getCurrentTheme());
+
+    document
+      .querySelectorAll<HTMLButtonElement>(".theme-toggle")
+      .forEach((button) => {
+        if (button.dataset.initialized === "true") {
+          return;
+        }
+
+        button.dataset.initialized = "true";
+
+        button.addEventListener("click", () => {
+          const nextTheme: Theme =
+            getCurrentTheme() === "dark" ? "light" : "dark";
+
+          applyTheme(nextTheme);
+        });
+      });
+  }
+
+  initializeThemeToggle();
+
+  document.addEventListener("astro:page-load", initializeThemeToggle);
+
+  window.addEventListener("storage", (event) => {
+    if (
+      event.key === storageKey &&
+      (event.newValue === "light" || event.newValue === "dark")
+    ) {
+      applyTheme(event.newValue);
+    }
+  });
+</script>

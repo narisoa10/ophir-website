@@ -1,0 +1,276 @@
+---
+import type { Locale } from "../../i18n/config";
+
+type TextParams<T extends Record<string, string>> = (params: T) => string;
+
+interface AssistantPlanOutcomeContent {
+  backLabel: string;
+  infoLabel: string;
+  forecastIconLabel: string;
+  checkIconLabel: string;
+  starIconLabel: string;
+  calendarIconLabel: string;
+  step: string;
+  title: string;
+  forecastTitleLine1: string;
+  forecastTitleLine2: string;
+  projectedShortfallLabel: string;
+  nextPaycheckBalanceLabel: string;
+  requiredPaymentsTitle: string;
+  requiredPaymentsDescription: string;
+  reserveSavingsTitle: string;
+  reserveSavingsDescription: string;
+  monthlyGoalTitle: string;
+  monthlyGoalDescription: TextParams<{ progress: string }>;
+  planSavedTitleLine1: string;
+  planSavedTitleLine2: string;
+  planSavedDescriptionLine1: string;
+  planSavedDescriptionLine2: string;
+  improveNextPeriodTitle: string;
+  improveNextPeriodDescriptionLine1: string;
+  improveNextPeriodDescriptionLine2: string;
+}
+
+interface Props {
+  locale: Locale;
+  content: AssistantPlanOutcomeContent;
+}
+
+interface PlanOutcomeData {
+  currencyCode: string;
+  projectedShortfall: number;
+  nextPaycheckBalance: number;
+  monthlyGoalProgress: number;
+}
+
+const { locale, content } = Astro.props;
+
+const mockupData: PlanOutcomeData = {
+  currencyCode: "CAD",
+  projectedShortfall: 0,
+  nextPaycheckBalance: 180,
+  monthlyGoalProgress: 0.92,
+};
+
+const numberFormatter = new Intl.NumberFormat(locale, {
+  maximumFractionDigits: 0,
+});
+
+const percentFormatter = new Intl.NumberFormat(locale, {
+  style: "percent",
+  maximumFractionDigits: 0,
+});
+
+const formatNumber = (value: number) => numberFormatter.format(value);
+const formatMoney = (value: number) =>
+  `${formatNumber(value)} ${mockupData.currencyCode}`;
+const formatPercent = (value: number) => percentFormatter.format(value);
+---
+
+<div class="h-[390px] w-[190px] overflow-hidden max-[190px]:h-[calc(390px*var(--assistant-phone-scale))] max-[190px]:w-[calc(190px*var(--assistant-phone-scale))] max-[190px]:[--assistant-phone-scale:calc(100vw/190)]">
+  <figure
+    class="relative h-[390px] max-h-[390px] min-h-0 w-[190px] min-w-0 max-w-[190px] shrink-0 rounded-[25px] bg-[#10131b] p-1 shadow-[0_14px_30px_rgba(15,23,42,0.22)] max-[190px]:origin-top-left max-[190px]:[transform:scale(var(--assistant-phone-scale))]"
+    aria-label={content.title}
+  >
+    <div class="relative h-full w-full overflow-hidden rounded-[21px] bg-white">
+      <div class="flex h-full flex-col px-3.5 pb-2 pt-2 text-[#071044]">
+        <section class="flex h-[35px] shrink-0 items-center gap-3 rounded-[7px] bg-[#f0f8f1] px-2.5">
+          <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full border border-[#b8e2bd] text-[#22aa4b]">
+            <svg
+              class="size-[16px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              role="img"
+              aria-label={content.forecastIconLabel}
+            >
+              <path d="m5 16 5-5 4 3 5-7"></path>
+              <path d="M15 7h4v4"></path>
+            </svg>
+          </div>
+
+          <p class="text-[8px] font-bold leading-snug text-[#071044]">
+            {content.forecastTitleLine1}<br />
+            {content.forecastTitleLine2}
+          </p>
+        </section>
+
+        <section class="mt-1.5 overflow-hidden rounded-[7px] border border-[#edf0f5] bg-white">
+          <article class="flex min-h-[39px] flex-col justify-center border-b border-[#edf0f5] px-3">
+            <h3 class="text-[7px] font-bold leading-tight text-[#071044]">
+              {content.projectedShortfallLabel}
+            </h3>
+            <p class="mt-0.5 text-[12px] font-bold leading-tight text-[#25ad51]">
+              {formatMoney(mockupData.projectedShortfall)}
+            </p>
+          </article>
+
+          <article class="flex min-h-[39px] flex-col justify-center border-b border-[#edf0f5] px-3">
+            <h3 class="text-[7px] font-bold leading-tight text-[#071044]">
+              {content.nextPaycheckBalanceLabel}
+            </h3>
+            <p class="mt-0.5 text-[12px] font-bold leading-tight text-[#25ad51]">
+              {formatMoney(mockupData.nextPaycheckBalance)}
+            </p>
+          </article>
+
+          <article class="grid min-h-[38px] grid-cols-[minmax(0,1fr)_16px] items-center gap-2 border-b border-[#edf0f5] px-3">
+            <div class="min-w-0">
+              <h3 class="text-[7px] font-bold leading-tight text-[#071044]">
+                {content.requiredPaymentsTitle}
+              </h3>
+              <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+                {content.requiredPaymentsDescription}
+              </p>
+            </div>
+            <span class="flex size-[12px] items-center justify-center rounded-full bg-[#25ad51] text-white">
+              <svg
+                class="size-[8px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                role="img"
+                aria-label={content.checkIconLabel}
+              >
+                <path d="m6 12 4 4 8-9"></path>
+              </svg>
+            </span>
+          </article>
+
+          <article class="grid min-h-[38px] grid-cols-[minmax(0,1fr)_16px] items-center gap-2 border-b border-[#edf0f5] px-3">
+            <div class="min-w-0">
+              <h3 class="text-[7px] font-bold leading-tight text-[#071044]">
+                {content.reserveSavingsTitle}
+              </h3>
+              <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+                {content.reserveSavingsDescription}
+              </p>
+            </div>
+            <span class="flex size-[12px] items-center justify-center rounded-full bg-[#25ad51] text-white">
+              <svg
+                class="size-[8px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                role="img"
+                aria-label={content.checkIconLabel}
+              >
+                <path d="m6 12 4 4 8-9"></path>
+              </svg>
+            </span>
+          </article>
+
+          <article class="grid min-h-[38px] grid-cols-[minmax(0,1fr)_16px] items-center gap-2 px-3">
+            <div class="min-w-0">
+              <h3 class="text-[7px] font-bold leading-tight text-[#071044]">
+                {content.monthlyGoalTitle}
+              </h3>
+              <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+                {
+                  content.monthlyGoalDescription({
+                    progress: formatPercent(mockupData.monthlyGoalProgress),
+                  })
+                }
+              </p>
+            </div>
+            <span class="flex size-[12px] items-center justify-center rounded-full bg-[#25ad51] text-white">
+              <svg
+                class="size-[8px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                role="img"
+                aria-label={content.checkIconLabel}
+              >
+                <path d="m6 12 4 4 8-9"></path>
+              </svg>
+            </span>
+          </article>
+        </section>
+
+        <aside class="mt-1.5 flex min-h-[58px] shrink-0 items-center gap-2.5 rounded-[7px] bg-[#f5f7ff] px-2.5">
+          <div class="flex size-[27px] shrink-0 items-center justify-center rounded-full border border-[#c2d0ff] text-[#3869ff]">
+            <svg
+              class="size-[16px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              role="img"
+              aria-label={content.starIconLabel}
+            >
+              <path d="m12 3 2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.4-4.2 6-.9Z"></path>
+            </svg>
+          </div>
+
+          <div class="min-w-0">
+            <p class="text-[7px] font-bold leading-tight text-[#071044]">
+              {content.planSavedTitleLine1}<br />
+              {content.planSavedTitleLine2}
+            </p>
+            <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+              {content.planSavedDescriptionLine1}
+            </p>
+            <p class="text-[7px] font-medium leading-tight text-[#071044]">
+              {content.planSavedDescriptionLine2}
+            </p>
+          </div>
+        </aside>
+
+        <aside class="mt-1.5 flex min-h-[52px] shrink-0 items-center gap-2.5 rounded-[7px] bg-[#f5f7ff] px-2.5">
+          <div class="flex size-[24px] shrink-0 items-center justify-center rounded-full border border-[#c2d0ff] text-[#3869ff]">
+            <svg
+              class="size-[14px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              role="img"
+              aria-label={content.calendarIconLabel}
+            >
+              <rect x="5" y="5" width="14" height="15" rx="2"></rect>
+              <path d="M8 3v4"></path>
+              <path d="M16 3v4"></path>
+              <path d="M5 10h14"></path>
+              <path d="m10 15 2 2 3-4"></path>
+            </svg>
+          </div>
+
+          <div class="min-w-0">
+            <p class="text-[7px] font-bold leading-tight text-[#071044]">
+              {content.improveNextPeriodTitle}
+            </p>
+            <p class="mt-0.5 text-[7px] font-medium leading-tight text-[#071044]">
+              {content.improveNextPeriodDescriptionLine1}
+            </p>
+            <p class="text-[7px] font-medium leading-tight text-[#071044]">
+              {content.improveNextPeriodDescriptionLine2}
+            </p>
+          </div>
+        </aside>
+
+        <div
+          class="mx-auto mt-auto h-[2px] w-[58px] shrink-0 rounded-full bg-[#071044]"
+          aria-hidden="true"
+        >
+        </div>
+      </div>
+    </div>
+  </figure>
+</div>

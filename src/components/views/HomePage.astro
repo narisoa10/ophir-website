@@ -1,0 +1,755 @@
+---
+import type { Locale } from "../../i18n/config";
+import { getTranslations } from "../../i18n/translations";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+import AssistantPhone from "../assistant/AssistantPhone.astro";
+import AssistantPlanDeviationPhone from "../assistant/AssistantPlanDeviationPhone.astro";
+import AssistantPlanOutcomePhone from "../assistant/AssistantPlanOutcomePhone.astro";
+import AssistantRecommendedActionsPhone from "../assistant/AssistantRecommendedActionsPhone.astro";
+import TransitionMarquee from "../TransitionMarquee.astro";
+import HomeHero from "../sections/home/HomeHero.astro";
+import HomeHowItWorks from "../sections/home/HomeHowItWorks.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.meta.title}
+  description={t.meta.description}
+>
+  <HomeHero locale={locale} content={t.home.hero} />
+
+  <TransitionMarquee />
+
+  <HomeHowItWorks content={t.home.productOverview} />
+
+  <AssistantPhone
+    locale={locale}
+    content={t.home.assistant}
+    showcaseTitle={t.home.assistantShowcase.title}
+  />
+
+  <template id="assistant-phone-2-template">
+    <AssistantPlanDeviationPhone
+      locale={locale}
+      content={t.home.assistantPlanDeviation}
+    />
+  </template>
+
+  <template id="assistant-phone-3-template">
+    <AssistantRecommendedActionsPhone
+      locale={locale}
+      content={t.home.assistantRecommendedActions}
+    />
+  </template>
+
+  <template id="assistant-phone-4-template">
+    <AssistantPlanOutcomePhone
+      locale={locale}
+      content={t.home.assistantPlanOutcome}
+    />
+  </template>
+
+  <template id="assistant-phone-1-subtitle-template">
+    <p>{t.home.assistantShowcase.subtitles.diagnosis}</p>
+  </template>
+
+  <template id="assistant-phone-2-subtitle-template">
+    <p>{t.home.assistantShowcase.subtitles.planDeviation}</p>
+  </template>
+
+  <template id="assistant-phone-3-subtitle-template">
+    <p>{t.home.assistantShowcase.subtitles.recommendedActions}</p>
+  </template>
+
+  <template id="assistant-phone-4-subtitle-template">
+    <p>{t.home.assistantShowcase.subtitles.planOutcome}</p>
+  </template>
+
+</BaseLayout>
+
+<script>
+  const isBackForwardPageShow = (event: PageTransitionEvent) => {
+    if (event.persisted) {
+      return true;
+    }
+
+    const [navigationEntry] = performance.getEntriesByType(
+      "navigation",
+    ) as PerformanceNavigationTiming[];
+
+    return navigationEntry?.type === "back_forward";
+  };
+
+  const shouldResetHomeScroll = (event: PageTransitionEvent) => {
+    if (window.location.hash) {
+      return false;
+    }
+
+    return isBackForwardPageShow(event);
+  };
+
+  window.addEventListener("pageshow", (event) => {
+    if (shouldResetHomeScroll(event)) {
+      window.scrollTo(0, 0);
+    }
+  });
+
+  const assistantSection = document.getElementById("assistant");
+
+  if (assistantSection) {
+    const assistantContainer = assistantSection.querySelector(":scope > .mx-auto");
+    const phoneItems = [
+      {
+        phone: "1",
+        subtitleTemplateId: "assistant-phone-1-subtitle-template",
+      },
+      {
+        id: "assistant-phone-2-template",
+        phone: "2",
+        subtitleTemplateId: "assistant-phone-2-subtitle-template",
+      },
+      {
+        id: "assistant-phone-3-template",
+        phone: "3",
+        subtitleTemplateId: "assistant-phone-3-subtitle-template",
+      },
+      {
+        id: "assistant-phone-4-template",
+        phone: "4",
+        subtitleTemplateId: "assistant-phone-4-subtitle-template",
+      },
+    ];
+    const assistantHeading = assistantContainer?.querySelector(
+      ":scope > [data-assistant-showcase-title]",
+    );
+    const firstPhone = assistantContainer?.querySelector(":scope > div");
+    let assistantPhoneSlots: HTMLElement[] = [];
+
+    if (assistantContainer && firstPhone instanceof HTMLElement) {
+      const slots: HTMLElement[] = [];
+
+      phoneItems.forEach(({ id, phone, subtitleTemplateId }) => {
+        const phoneTemplate = id ? document.getElementById(id) : undefined;
+        const phoneElement =
+          phone === "1"
+            ? firstPhone
+            : phoneTemplate instanceof HTMLTemplateElement
+              ? phoneTemplate.content.firstElementChild?.cloneNode(true)
+              : undefined;
+        const subtitleTemplate = document.getElementById(subtitleTemplateId);
+        const subtitleElement =
+          subtitleTemplate instanceof HTMLTemplateElement
+            ? subtitleTemplate.content.firstElementChild?.cloneNode(true)
+            : undefined;
+
+        if (
+          !(phoneElement instanceof HTMLElement) ||
+          !(subtitleElement instanceof HTMLElement)
+        ) {
+          return;
+        }
+
+        const slot = document.createElement("div");
+
+        slot.dataset.assistantPhoneSlot = phone;
+        subtitleElement.dataset.assistantPhoneSubtitle = phone;
+        phoneElement.dataset.assistantPhone = phone;
+        slot.append(subtitleElement, phoneElement);
+        slots.push(slot);
+      });
+
+      assistantPhoneSlots = slots;
+      assistantContainer.replaceChildren(
+        ...(assistantHeading instanceof HTMLElement ? [assistantHeading] : []),
+        ...slots,
+      );
+    }
+
+    const updatePhoneFinalPositions = () => {
+      if (!assistantContainer || assistantPhoneSlots.length === 0) {
+        return;
+      }
+
+      const containerStyles = window.getComputedStyle(assistantContainer);
+      const containerContentWidth =
+        assistantContainer.clientWidth -
+        Number.parseFloat(containerStyles.paddingLeft) -
+        Number.parseFloat(containerStyles.paddingRight);
+      const phoneWidth = Number.parseFloat(
+        containerStyles.getPropertyValue("--assistant-phone-width"),
+      );
+      const phoneGap = Number.parseFloat(
+        containerStyles.getPropertyValue("--assistant-phone-gap"),
+      );
+      const phoneStep = phoneWidth + phoneGap;
+      const groupWidth =
+        assistantPhoneSlots.length * phoneWidth +
+        (assistantPhoneSlots.length - 1) * phoneGap;
+      const groupStartX = (containerContentWidth - groupWidth) / 2;
+
+      assistantPhoneSlots.forEach((slot, index) => {
+        slot.style.setProperty(
+          "--assistant-phone-final-x",
+          `${groupStartX + index * phoneStep}px`,
+        );
+        slot.style.setProperty(
+          "--assistant-phone-exit-x",
+          `${-(groupStartX + index * phoneStep + phoneWidth + 220)}px`,
+        );
+      });
+    };
+
+    updatePhoneFinalPositions();
+
+    const readTimeVariable = (name: string) => {
+      if (!assistantContainer) {
+        return 0;
+      }
+
+      const value = window
+        .getComputedStyle(assistantContainer)
+        .getPropertyValue(name)
+        .trim();
+
+      if (value.endsWith("ms")) {
+        return Number.parseFloat(value);
+      }
+
+      if (value.endsWith("s")) {
+        return Number.parseFloat(value) * 1000;
+      }
+
+      return Number.parseFloat(value);
+    };
+
+    const createCycleAbortError = () =>
+      new DOMException("Assistant animation cycle stopped.", "AbortError");
+
+    const isCycleAbortError = (error: unknown) =>
+      error instanceof DOMException && error.name === "AbortError";
+
+    const assertCycleActive = (signal: AbortSignal) => {
+      if (signal.aborted) {
+        throw createCycleAbortError();
+      }
+    };
+
+    const wait = (duration: number, signal: AbortSignal) =>
+      new Promise<void>((resolve, reject) => {
+        assertCycleActive(signal);
+
+        const timeout = window.setTimeout(() => {
+          signal.removeEventListener("abort", handleAbort);
+          resolve();
+        }, Number.isFinite(duration) ? duration : 0);
+
+        const handleAbort = () => {
+          window.clearTimeout(timeout);
+          reject(createCycleAbortError());
+        };
+
+        signal.addEventListener("abort", handleAbort, { once: true });
+      });
+
+    const getPhone = (slot: HTMLElement) =>
+      slot.querySelector("[data-assistant-phone]");
+    const getSubtitle = (slot: HTMLElement) =>
+      slot.querySelector("[data-assistant-phone-subtitle]");
+
+    const prepareSlotForEntry = (slot: HTMLElement) => {
+      const phone = getPhone(slot);
+      const subtitle = getSubtitle(slot);
+
+      if (phone instanceof HTMLElement) {
+        phone.style.opacity = "0";
+        phone.style.transform =
+          "translate3d(calc(var(--assistant-phone-start-x) - var(--assistant-phone-final-x)), 0, 0) rotateY(0deg)";
+        phone.getAnimations().forEach((animation) => animation.cancel());
+      }
+
+      if (subtitle instanceof HTMLElement) {
+        subtitle.style.opacity = "0";
+        subtitle.style.transform = "translateY(6px)";
+        subtitle.getAnimations().forEach((animation) => animation.cancel());
+      }
+    };
+
+    const prepareAllSlotsForInitialEntry = () => {
+      assistantPhoneSlots.forEach((slot) => {
+        prepareSlotForEntry(slot);
+      });
+    };
+
+    const resetAssistantCycleState = () => {
+      updatePhoneFinalPositions();
+      prepareAllSlotsForInitialEntry();
+      delete assistantSection.dataset.assistantPhoneCycleActive;
+    };
+
+    const clearFinishedSlotAnimations = (slot: HTMLElement) => {
+      const phone = getPhone(slot);
+      const subtitle = getSubtitle(slot);
+
+      if (phone instanceof HTMLElement) {
+        const phoneStyles = window.getComputedStyle(phone);
+
+        phone.style.opacity = phoneStyles.opacity;
+        phone.style.transform = phoneStyles.transform;
+        phone.getAnimations().forEach((animation) => animation.cancel());
+      }
+
+      if (subtitle instanceof HTMLElement) {
+        const subtitleStyles = window.getComputedStyle(subtitle);
+
+        subtitle.style.opacity = subtitleStyles.opacity;
+        subtitle.style.transform = subtitleStyles.transform;
+        subtitle.getAnimations().forEach((animation) => animation.cancel());
+      }
+    };
+
+    const showStaticCycleState = () => {
+      assistantPhoneSlots.forEach((slot) => {
+        const phone = getPhone(slot);
+        const subtitle = getSubtitle(slot);
+
+        if (phone instanceof HTMLElement) {
+          phone.style.opacity = "1";
+          phone.style.transform = "translate3d(0, 0, 0) rotateY(2160deg)";
+        }
+
+        if (subtitle instanceof HTMLElement) {
+          subtitle.style.opacity = "1";
+          subtitle.style.transform = "translateY(0)";
+        }
+      });
+    };
+
+    const animateElement = async (
+      element: HTMLElement,
+      keyframes: Keyframe[],
+      options: KeyframeAnimationOptions,
+      signal: AbortSignal,
+    ) => {
+      assertCycleActive(signal);
+
+      const animation = element.animate(keyframes, options);
+      const handleAbort = () => {
+        animation.cancel();
+      };
+
+      signal.addEventListener("abort", handleAbort, { once: true });
+
+      try {
+        await animation.finished;
+        assertCycleActive(signal);
+      } catch (error) {
+        if (signal.aborted || isCycleAbortError(error)) {
+          throw createCycleAbortError();
+        }
+      } finally {
+        signal.removeEventListener("abort", handleAbort);
+      }
+    };
+
+    const enterPhone = async (slot: HTMLElement, signal: AbortSignal) => {
+      assertCycleActive(signal);
+
+      const phone = getPhone(slot);
+
+      if (!(phone instanceof HTMLElement)) {
+        return;
+      }
+
+      const duration = readTimeVariable("--assistant-phone-animation-duration");
+
+      await animateElement(
+        phone,
+        [
+          {
+            opacity: 0,
+            transform:
+              "translate3d(calc(var(--assistant-phone-start-x) - var(--assistant-phone-final-x)), 0, 0) rotateY(0deg)",
+          },
+          {
+            opacity: 1,
+            transform: "translate3d(0, 0, 0) rotateY(2160deg)",
+          },
+        ],
+        {
+          duration,
+          easing: "linear",
+          fill: "forwards",
+        },
+        signal,
+      );
+
+      assertCycleActive(signal);
+      phone.style.opacity = "1";
+      phone.style.transform = "translate3d(0, 0, 0) rotateY(2160deg)";
+    };
+
+    const revealSubtitle = async (slot: HTMLElement, signal: AbortSignal) => {
+      assertCycleActive(signal);
+
+      const subtitle = getSubtitle(slot);
+
+      if (!(subtitle instanceof HTMLElement)) {
+        return;
+      }
+
+      const duration = readTimeVariable(
+        "--assistant-subtitle-animation-duration",
+      );
+
+      await animateElement(
+        subtitle,
+        [
+          {
+            opacity: 0,
+            transform: "translateY(6px)",
+          },
+          {
+            opacity: 1,
+            transform: "translateY(0)",
+          },
+        ],
+        {
+          duration,
+          easing: "ease-out",
+          fill: "forwards",
+        },
+        signal,
+      );
+
+      assertCycleActive(signal);
+      subtitle.style.opacity = "1";
+      subtitle.style.transform = "translateY(0)";
+    };
+
+    const exitSlot = async (
+      slot: HTMLElement,
+      signal: AbortSignal,
+      prepareAfterExit = true,
+    ) => {
+      assertCycleActive(signal);
+
+      const phone = getPhone(slot);
+      const subtitle = getSubtitle(slot);
+      const phoneDuration = readTimeVariable(
+        "--assistant-phone-animation-duration",
+      );
+
+      const animations: Promise<void>[] = [];
+
+      if (phone instanceof HTMLElement) {
+        animations.push(
+          animateElement(
+            phone,
+            [
+              {
+                opacity: 1,
+                transform: "translate3d(0, 0, 0) rotateY(2160deg)",
+              },
+              {
+                opacity: 1,
+                transform:
+                  "translate3d(var(--assistant-phone-exit-x), 0, 0) rotateY(4320deg)",
+              },
+            ],
+            {
+              duration: phoneDuration,
+              easing: "linear",
+              fill: "forwards",
+            },
+            signal,
+          ),
+        );
+      }
+
+      if (subtitle instanceof HTMLElement) {
+        animations.push(
+          animateElement(
+            subtitle,
+            [
+              {
+                opacity: 1,
+                transform: "translate3d(0, 0, 0)",
+              },
+              {
+                opacity: 0,
+                transform: "translate3d(var(--assistant-phone-exit-x), 0, 0)",
+              },
+            ],
+            {
+              duration: phoneDuration,
+              easing: "linear",
+              fill: "forwards",
+            },
+            signal,
+          ),
+        );
+      }
+
+      await Promise.all(animations);
+      assertCycleActive(signal);
+      clearFinishedSlotAnimations(slot);
+
+      if (prepareAfterExit) {
+        prepareSlotForEntry(slot);
+      }
+    };
+
+    const runAssistantCycle = async (signal: AbortSignal) => {
+      const pauseDuration = readTimeVariable("--assistant-cycle-pause-duration");
+
+      assertCycleActive(signal);
+      prepareAllSlotsForInitialEntry();
+
+      while (true) {
+        for (const slot of assistantPhoneSlots) {
+          await enterPhone(slot, signal);
+          await revealSubtitle(slot, signal);
+        }
+
+        await wait(pauseDuration, signal);
+
+        for (const [index, slot] of assistantPhoneSlots.entries()) {
+          await exitSlot(slot, signal, index < assistantPhoneSlots.length - 1);
+        }
+      }
+    };
+
+    let isVisible = false;
+    let hasScrolled = window.scrollY > 0;
+    let cycleController: AbortController | undefined;
+
+    const refreshAssistantVisibility = () => {
+      const rect = assistantSection.getBoundingClientRect();
+      const visibleWidth = Math.max(
+        0,
+        Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0),
+      );
+      const visibleHeight = Math.max(
+        0,
+        Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0),
+      );
+      const sectionArea = rect.width * rect.height;
+      const visibleArea = visibleWidth * visibleHeight;
+
+      isVisible = sectionArea > 0 && visibleArea / sectionArea >= 0.01;
+
+      return isVisible;
+    };
+
+    const stopAssistantCycle = () => {
+      if (cycleController) {
+        cycleController.abort();
+        cycleController = undefined;
+      }
+
+      resetAssistantCycleState();
+    };
+
+    const playAnimation = () => {
+      refreshAssistantVisibility();
+
+      if (!isVisible || !hasScrolled || document.hidden || cycleController) {
+        return;
+      }
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        showStaticCycleState();
+        return;
+      }
+
+      const controller = new AbortController();
+
+      cycleController = controller;
+      assistantSection.dataset.assistantPhoneCycleActive = "true";
+
+      void runAssistantCycle(controller.signal)
+        .catch((error) => {
+          if (!isCycleAbortError(error)) {
+            window.setTimeout(() => {
+              throw error;
+            });
+          }
+        })
+        .finally(() => {
+          if (cycleController === controller) {
+            cycleController = undefined;
+            delete assistantSection.dataset.assistantPhoneCycleActive;
+          }
+        });
+    };
+
+    const restartAssistantCycleFromInitialState = () => {
+      stopAssistantCycle();
+      playAnimation();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = Boolean(entry?.isIntersecting);
+
+        if (isVisible) {
+          playAnimation();
+        } else {
+          stopAssistantCycle();
+        }
+      },
+      {
+        threshold: 0.01,
+      },
+    );
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        hasScrolled = true;
+        playAnimation();
+      },
+      { passive: true },
+    );
+    window.addEventListener("resize", updatePhoneFinalPositions);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stopAssistantCycle();
+      } else {
+        restartAssistantCycleFromInitialState();
+      }
+    });
+    window.addEventListener("pagehide", stopAssistantCycle);
+    window.addEventListener("pageshow", (event) => {
+      if (isBackForwardPageShow(event)) {
+        restartAssistantCycleFromInitialState();
+      } else {
+        updatePhoneFinalPositions();
+        playAnimation();
+      }
+    });
+
+    observer.observe(assistantSection);
+  }
+</script>
+
+<style>
+  :global(#assistant) {
+    --assistant-section-padding-bottom: 32px;
+    --assistant-section-padding-top: 6px;
+    background: var(--color-primary);
+    padding-block:
+      var(--assistant-section-padding-top)
+      var(--assistant-section-padding-bottom);
+    overflow: hidden;
+  }
+
+  :global(#assistant > .mx-auto) {
+    --assistant-cycle-pause-duration: 6000ms;
+    --assistant-phone-animation-duration: 6000ms;
+    --assistant-phone-gap: 24px;
+    --assistant-phone-group-width: calc(
+      var(--assistant-phone-width) + var(--assistant-phone-width) +
+        var(--assistant-phone-width) + var(--assistant-phone-width) +
+        var(--assistant-phone-gap) + var(--assistant-phone-gap) +
+        var(--assistant-phone-gap)
+    );
+    --assistant-phone-height: 390px;
+    --assistant-phone-step-x: calc(
+      var(--assistant-phone-width) + var(--assistant-phone-gap)
+    );
+    --assistant-phone-width: 190px;
+    --assistant-showcase-title-gap: 8px;
+    --assistant-showcase-title-height: 22px;
+    --assistant-subtitle-animation-duration: 280ms;
+    --assistant-subtitle-height: 20px;
+    --assistant-subtitle-phone-gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(4, var(--assistant-phone-width));
+    grid-template-rows:
+      var(--assistant-showcase-title-height)
+      minmax(0, 1fr);
+    column-gap: var(--assistant-phone-gap);
+    row-gap: var(--assistant-showcase-title-gap);
+    height: calc(
+      var(--assistant-showcase-title-height) +
+        var(--assistant-showcase-title-gap) +
+        var(--assistant-subtitle-height) + var(--assistant-subtitle-phone-gap) +
+        var(--assistant-phone-height)
+    );
+    align-items: start;
+    justify-content: center;
+    overflow: visible;
+    perspective: 900px;
+  }
+
+  :global(#assistant > .mx-auto > [data-assistant-showcase-title]) {
+    grid-column: 1 / -1;
+    height: var(--assistant-showcase-title-height);
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-body-large);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--assistant-showcase-title-height);
+    letter-spacing: var(--letter-spacing-body);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  :global(#assistant > .mx-auto > [data-assistant-phone-slot]) {
+    display: flex;
+    width: var(--assistant-phone-width);
+    flex-direction: column;
+    align-items: center;
+    gap: var(--assistant-subtitle-phone-gap);
+  }
+
+  :global(#assistant > .mx-auto [data-assistant-phone-subtitle]) {
+    height: var(--assistant-subtitle-height);
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-family-sans);
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--assistant-subtitle-height);
+    opacity: 0;
+    text-align: center;
+    transform: translateY(6px);
+    white-space: nowrap;
+  }
+
+  :global(#assistant > .mx-auto [data-assistant-phone]) {
+    --assistant-phone-final-x: 0px;
+    --assistant-phone-start-x: calc(100vw + 220px);
+    opacity: 0;
+    transform: translate3d(
+        calc(var(--assistant-phone-start-x) - var(--assistant-phone-final-x)),
+        0,
+        0
+      )
+      rotateY(0deg);
+    transform-origin: center center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(#assistant > .mx-auto [data-assistant-phone]),
+    :global(#assistant > .mx-auto [data-assistant-phone-subtitle]) {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+</style>

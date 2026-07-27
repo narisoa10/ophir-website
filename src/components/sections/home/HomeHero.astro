@@ -1,0 +1,76 @@
+---
+import { siteAssets } from "../../../config/site-assets";
+import { siteSections } from "../../../config/site-sections";
+import type { Locale } from "../../../i18n/config";
+
+interface Props {
+  locale: Locale;
+  content: {
+    title: string;
+    description: string;
+    primaryAction: string;
+    securityNote: string;
+    panelLabel: string;
+  };
+}
+
+const { locale, content } = Astro.props;
+---
+
+<section
+  class="home-hero-section"
+  aria-labelledby={`home-hero-title-${locale}`}
+>
+  <div class="home-hero">
+    <div class="home-hero__inner">
+      <div class="home-hero__copy">
+        <h1 id={`home-hero-title-${locale}`} class="home-hero__title">
+          {content.title}
+        </h1>
+
+        <p class="home-hero__description">
+          {content.description}
+        </p>
+
+        <div class="home-hero__actions">
+          <a
+            class="home-hero__button home-hero__button--primary"
+            href={siteSections.contact}
+          >
+            {content.primaryAction}
+          </a>
+        </div>
+      </div>
+
+      <div class="home-hero__media" aria-hidden="true">
+        <img
+          src={siteAssets.homeHeroFamilyCoast}
+          alt=""
+          class="home-hero__image"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!--
+  <div class="home-hero-panel" aria-label={content.panelLabel}>
+    {
+      content.tiles.map((tile) => (
+        <article class="home-hero-panel__tile">
+          <div class="home-hero-panel__icon">
+            <AppIcon name={tile.icon} strokeWidth={1.7} />
+          </div>
+
+          <div>
+            <h2 class="home-hero-panel__title">{tile.title}</h2>
+            <p class="home-hero-panel__text">{tile.text}</p>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+  -->
+</section>
