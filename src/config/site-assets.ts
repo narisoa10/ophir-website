@@ -1,4 +1,4 @@
 export const siteAssets = {
   homeHeroFamilyCoast: "/images/hero-family-coast.png",
-  homeHowOphirWorks: "/images/how-ophir-works/how-ophir-works.webp",
+  homeHowOphirWorks: "/images/how-ophir-works/ophir-financial-analysis.webp",
 } as const;
