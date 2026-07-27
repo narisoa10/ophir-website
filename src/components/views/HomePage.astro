@@ -132,10 +132,18 @@ const t = getTranslations(locale);
       ":scope > [data-assistant-showcase-title]",
     );
     const firstPhone = assistantContainer?.querySelector(":scope > div");
+    const assistantPhoneCarousel = document.createElement("div");
+    const assistantPhoneIndicator = document.createElement("div");
+    const assistantIndicatorDots: HTMLElement[] = [];
     let assistantPhoneSlots: HTMLElement[] = [];
 
     if (assistantContainer && firstPhone instanceof HTMLElement) {
       const slots: HTMLElement[] = [];
+
+      assistantPhoneCarousel.dataset.assistantPhoneCarousel = "";
+      assistantPhoneCarousel.tabIndex = 0;
+      assistantPhoneIndicator.dataset.assistantPhoneIndicator = "";
+      assistantPhoneIndicator.setAttribute("aria-hidden", "true");
 
       phoneItems.forEach(({ id, phone, subtitleTemplateId }) => {
         const phoneTemplate = id ? document.getElementById(id) : undefined;
@@ -164,15 +172,71 @@ const t = getTranslations(locale);
         subtitleElement.dataset.assistantPhoneSubtitle = phone;
         phoneElement.dataset.assistantPhone = phone;
         slot.append(subtitleElement, phoneElement);
+        assistantPhoneCarousel.append(slot);
         slots.push(slot);
       });
 
+      slots.forEach((_, index) => {
+        const dot = document.createElement("span");
+
+        dot.dataset.assistantPhoneIndicatorDot = "";
+        dot.dataset.active = index === 0 ? "true" : "false";
+        assistantIndicatorDots.push(dot);
+      });
+
+      assistantPhoneIndicator.replaceChildren(...assistantIndicatorDots);
       assistantPhoneSlots = slots;
       assistantContainer.replaceChildren(
         ...(assistantHeading instanceof HTMLElement ? [assistantHeading] : []),
-        ...slots,
+        assistantPhoneCarousel,
+        assistantPhoneIndicator,
       );
     }
+
+    let activeSlideFrame = 0;
+    const updateActiveCarouselSlide = () => {
+      activeSlideFrame = 0;
+
+      if (
+        assistantPhoneSlots.length === 0 ||
+        assistantIndicatorDots.length === 0
+      ) {
+        return;
+      }
+
+      const carouselRect = assistantPhoneCarousel.getBoundingClientRect();
+      const carouselCenter =
+        assistantPhoneCarousel.scrollLeft + assistantPhoneCarousel.clientWidth / 2;
+      let activeIndex = 0;
+      let activeDistance = Number.POSITIVE_INFINITY;
+
+      assistantPhoneSlots.forEach((slot, index) => {
+        const slotRect = slot.getBoundingClientRect();
+        const slotCenter =
+          slotRect.left -
+          carouselRect.left +
+          assistantPhoneCarousel.scrollLeft +
+          slotRect.width / 2;
+        const distance = Math.abs(slotCenter - carouselCenter);
+
+        if (distance < activeDistance) {
+          activeDistance = distance;
+          activeIndex = index;
+        }
+      });
+
+      assistantIndicatorDots.forEach((dot, index) => {
+        dot.dataset.active = index === activeIndex ? "true" : "false";
+      });
+    };
+
+    const scheduleActiveCarouselSlideUpdate = () => {
+      if (activeSlideFrame) {
+        return;
+      }
+
+      activeSlideFrame = window.requestAnimationFrame(updateActiveCarouselSlide);
+    };
 
     const updatePhoneFinalPositions = () => {
       if (!assistantContainer || assistantPhoneSlots.length === 0) {
@@ -264,6 +328,8 @@ const t = getTranslations(locale);
       slot.querySelector("[data-assistant-phone]");
     const getSubtitle = (slot: HTMLElement) =>
       slot.querySelector("[data-assistant-phone-subtitle]");
+    const assistantCarouselQuery = window.matchMedia("(max-width: 1100px)");
+    const isCarouselLayout = () => assistantCarouselQuery.matches;
 
     const prepareSlotForEntry = (slot: HTMLElement) => {
       const phone = getPhone(slot);
@@ -331,6 +397,28 @@ const t = getTranslations(locale);
           subtitle.style.transform = "translateY(0)";
         }
       });
+    };
+
+    const showCarouselState = () => {
+      assistantPhoneSlots.forEach((slot) => {
+        const phone = getPhone(slot);
+        const subtitle = getSubtitle(slot);
+
+        if (phone instanceof HTMLElement) {
+          phone.getAnimations().forEach((animation) => animation.cancel());
+          phone.style.opacity = "1";
+          phone.style.removeProperty("transform");
+        }
+
+        if (subtitle instanceof HTMLElement) {
+          subtitle.getAnimations().forEach((animation) => animation.cancel());
+          subtitle.style.opacity = "1";
+          subtitle.style.transform = "translateY(0)";
+        }
+      });
+
+      delete assistantSection.dataset.assistantPhoneCycleActive;
+      scheduleActiveCarouselSlideUpdate();
     };
 
     const animateElement = async (
@@ -550,16 +638,26 @@ const t = getTranslations(locale);
       return isVisible;
     };
 
-    const stopAssistantCycle = () => {
+    const stopAssistantCycle = (shouldReset = true) => {
       if (cycleController) {
         cycleController.abort();
         cycleController = undefined;
       }
 
-      resetAssistantCycleState();
+      if (shouldReset) {
+        resetAssistantCycleState();
+      } else {
+        delete assistantSection.dataset.assistantPhoneCycleActive;
+      }
     };
 
     const playAnimation = () => {
+      if (isCarouselLayout()) {
+        stopAssistantCycle(false);
+        showCarouselState();
+        return;
+      }
+
       refreshAssistantVisibility();
 
       if (!isVisible || !hasScrolled || document.hidden || cycleController) {
@@ -604,7 +702,7 @@ const t = getTranslations(locale);
         if (isVisible) {
           playAnimation();
         } else {
-          stopAssistantCycle();
+          stopAssistantCycle(!isCarouselLayout());
         }
       },
       {
@@ -620,15 +718,36 @@ const t = getTranslations(locale);
       },
       { passive: true },
     );
-    window.addEventListener("resize", updatePhoneFinalPositions);
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        stopAssistantCycle();
+    assistantPhoneCarousel.addEventListener(
+      "scroll",
+      scheduleActiveCarouselSlideUpdate,
+      { passive: true },
+    );
+    window.addEventListener("resize", () => {
+      updatePhoneFinalPositions();
+
+      if (isCarouselLayout()) {
+        showCarouselState();
+      }
+    });
+    assistantCarouselQuery.addEventListener("change", () => {
+      if (isCarouselLayout()) {
+        stopAssistantCycle(false);
+        showCarouselState();
       } else {
         restartAssistantCycleFromInitialState();
       }
     });
-    window.addEventListener("pagehide", stopAssistantCycle);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stopAssistantCycle(!isCarouselLayout());
+      } else {
+        restartAssistantCycleFromInitialState();
+      }
+    });
+    window.addEventListener("pagehide", () => {
+      stopAssistantCycle();
+    });
     window.addEventListener("pageshow", (event) => {
       if (isBackForwardPageShow(event)) {
         restartAssistantCycleFromInitialState();
@@ -692,6 +811,14 @@ const t = getTranslations(locale);
     perspective: 900px;
   }
 
+  :global(#assistant > .mx-auto > [data-assistant-phone-carousel]) {
+    display: contents;
+  }
+
+  :global(#assistant > .mx-auto > [data-assistant-phone-indicator]) {
+    display: none;
+  }
+
   :global(#assistant > .mx-auto > [data-assistant-showcase-title]) {
     grid-column: 1 / -1;
     height: var(--assistant-showcase-title-height);
@@ -706,7 +833,7 @@ const t = getTranslations(locale);
     white-space: nowrap;
   }
 
-  :global(#assistant > .mx-auto > [data-assistant-phone-slot]) {
+  :global(#assistant > .mx-auto [data-assistant-phone-slot]) {
     display: flex;
     width: var(--assistant-phone-width);
     flex-direction: column;
@@ -744,12 +871,151 @@ const t = getTranslations(locale);
     will-change: transform, opacity;
   }
 
+  @media (max-width: 1100px) {
+    :global(#assistant) {
+      --assistant-section-padding-bottom: var(--space-8);
+      --assistant-section-padding-top: var(--space-6);
+    }
+
+    :global(#assistant > .mx-auto) {
+      --assistant-carousel-dot-color: rgba(15, 23, 42, 0.28);
+      --assistant-carousel-dot-color-active: var(--color-text);
+      --assistant-carousel-indicator-gap: var(--space-2);
+      --assistant-carousel-indicator-margin-top: var(--space-1);
+      --assistant-phone-carousel-width: 285px;
+      --assistant-phone-slot-min-height: 617px;
+      --assistant-phone-visual-scale: 1.5;
+      --assistant-showcase-title-gap: var(--space-4);
+      --assistant-subtitle-phone-gap: var(--space-3);
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto auto;
+      width: 100%;
+      height: auto;
+      justify-items: center;
+      overflow: hidden;
+      perspective: none;
+      row-gap: var(--assistant-showcase-title-gap);
+    }
+
+    :global(#assistant > .mx-auto > [data-assistant-showcase-title]) {
+      grid-column: 1;
+      height: auto;
+      line-height: var(--line-height-body-large);
+    }
+
+    :global(#assistant > .mx-auto > [data-assistant-phone-carousel]) {
+      display: flex;
+      grid-column: 1;
+      width: var(--assistant-phone-carousel-width);
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      padding-block: 2px 18px;
+      scroll-padding-inline: 0;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      touch-action: pan-x pan-y;
+    }
+
+    :global(
+        #assistant > .mx-auto > [data-assistant-phone-carousel]::-webkit-scrollbar
+      ) {
+      display: none;
+    }
+
+    :global(#assistant > .mx-auto [data-assistant-phone-slot]) {
+      min-width: 100%;
+      min-height: var(--assistant-phone-slot-min-height);
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      width: 100%;
+    }
+
+    :global(#assistant > .mx-auto [data-assistant-phone-subtitle]) {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    :global(#assistant > .mx-auto [data-assistant-phone]) {
+      opacity: 1;
+      transform: scale(var(--assistant-phone-visual-scale));
+      transform-origin: top center;
+      will-change: auto;
+    }
+
+    :global(#assistant > .mx-auto > [data-assistant-phone-indicator]) {
+      display: flex;
+      grid-column: 1;
+      align-items: center;
+      justify-content: center;
+      gap: var(--assistant-carousel-indicator-gap);
+      margin-top: var(--assistant-carousel-indicator-margin-top);
+    }
+
+    :global(
+        #assistant
+          > .mx-auto
+          > [data-assistant-phone-indicator]
+          > [data-assistant-phone-indicator-dot]
+      ) {
+      display: block;
+      width: var(--space-2);
+      height: var(--space-2);
+      border-radius: var(--radius-pill);
+      background: var(--assistant-carousel-dot-color);
+      transition:
+        width var(--transition-fast),
+        background-color var(--transition-fast);
+    }
+
+    :global(
+        #assistant
+          > .mx-auto
+          > [data-assistant-phone-indicator]
+          > [data-assistant-phone-indicator-dot][data-active="true"]
+      ) {
+      width: var(--space-5);
+      background: var(--assistant-carousel-dot-color-active);
+    }
+  }
+
+  @media (max-width: 720px) {
+    :global(#assistant) {
+      --assistant-section-padding-bottom: var(--space-7);
+      --assistant-section-padding-top: var(--space-5);
+    }
+
+    :global(#assistant > .mx-auto) {
+      --assistant-phone-carousel-width: 258px;
+      --assistant-phone-slot-min-height: 559px;
+      --assistant-phone-visual-scale: 1.36;
+      --assistant-showcase-title-gap: var(--space-3);
+      --assistant-subtitle-phone-gap: var(--space-2);
+    }
+  }
+
+  @media (max-width: 360px) {
+    :global(#assistant > .mx-auto) {
+      --assistant-phone-carousel-width: 239px;
+      --assistant-phone-slot-min-height: 520px;
+      --assistant-phone-visual-scale: 1.26;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     :global(#assistant > .mx-auto [data-assistant-phone]),
     :global(#assistant > .mx-auto [data-assistant-phone-subtitle]) {
       opacity: 1;
       transform: none;
       animation: none;
+    }
+  }
+
+  @media (max-width: 1100px) and (prefers-reduced-motion: reduce) {
+    :global(#assistant > .mx-auto [data-assistant-phone]) {
+      transform: scale(var(--assistant-phone-visual-scale));
     }
   }
 </style>
