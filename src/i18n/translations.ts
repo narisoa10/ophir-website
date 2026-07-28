@@ -90,9 +90,9 @@ export const translations = {
 
     home: {
       hero: {
-        title: "Order starts here.",
+        title: "Understand your finances.",
         description:
-          "Life is simpler when your finances are under control.",
+          "See where your money goes.\nMake better financial decisions.",
         primaryAction: "Bring Order to My Finances",
         secondaryAction: "See How It Works",
         securityNote: "Bank-level security. Your data stays yours.",
@@ -822,9 +822,9 @@ export const translations = {
 
     home: {
       hero: {
-        title: "L'ordre commence ici.",
+        title: "Comprenez vos finances.",
         description:
-          "La vie est plus simple lorsque vos finances sont sous contrôle.",
+          "Voyez où va votre argent.\nPrenez de meilleures décisions financières.",
         primaryAction: "Mettre de l'ordre dans mes finances",
         secondaryAction: "Voir comment ça fonctionne",
         securityNote:
@@ -1558,9 +1558,9 @@ export const translations = {
 
     home: {
       hero: {
-        title: "Порядок начинается здесь.",
+        title: "Понимайте свои финансы.",
         description:
-          "Жить проще, когда финансы под контролем.",
+          "Видьте, куда уходят ваши деньги.\nПринимайте более взвешенные финансовые решения.",
         primaryAction: "Навести порядок",
         secondaryAction: "Посмотреть возможности",
         securityNote:
