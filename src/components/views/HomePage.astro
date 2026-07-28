@@ -18,6 +18,11 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getTranslations(locale);
+const assistantMobileStages = [
+  { phone: "1", ...t.home.assistantShowcase.mobileStages.diagnosis }, { phone: "2", ...t.home.assistantShowcase.mobileStages.optimization },
+  { phone: "4", ...t.home.assistantShowcase.mobileStages.forecast }, { phone: "3", ...t.home.assistantShowcase.mobileStages.recoveryPlan },
+];
+const assistantMobileStageJson = JSON.stringify({ indicatorGroupLabel: t.home.assistantShowcase.mobileIndicatorGroupLabel, stages: assistantMobileStages });
 ---
 
 <BaseLayout
@@ -74,6 +79,7 @@ const t = getTranslations(locale);
     <p>{t.home.assistantShowcase.subtitles.planOutcome}</p>
   </template>
 
+<script is:inline id="assistant-mobile-stage-data" type="application/json" set:html={assistantMobileStageJson}></script>
 </BaseLayout>
 
 <script>
@@ -640,6 +646,271 @@ const t = getTranslations(locale);
 
     observer.observe(assistantSection);
   }
+
+  if (assistantSection) {
+    type AssistantMobileStage = {
+      description: string;
+      indicatorLabel: string;
+      phone: string;
+      title: string;
+    };
+    type AssistantMobileStageData = {
+      indicatorGroupLabel: string;
+      stages: AssistantMobileStage[];
+    };
+    const assistantMobileMedia = window.matchMedia("(max-width: 1100px)");
+    let assistantMobileCleanup: (() => void) | undefined;
+    const readAssistantMobileStageData = ():
+      | AssistantMobileStageData
+      | undefined => {
+      const dataElement = document.getElementById("assistant-mobile-stage-data");
+      if (!(dataElement instanceof HTMLScriptElement)) {
+        return undefined;
+      }
+      try {
+        const data = JSON.parse(dataElement.textContent ?? "") as {
+          indicatorGroupLabel?: unknown;
+          stages?: unknown;
+        };
+        const isAssistantMobileStage = (
+          stage: unknown,
+        ): stage is AssistantMobileStage => {
+          if (!stage || typeof stage !== "object") {
+            return false;
+          }
+
+          const candidate = stage as Record<string, unknown>;
+
+          return (
+            typeof candidate.description === "string" &&
+            typeof candidate.indicatorLabel === "string" &&
+            typeof candidate.phone === "string" &&
+            typeof candidate.title === "string"
+          );
+        };
+
+        if (
+          typeof data.indicatorGroupLabel !== "string" ||
+          !Array.isArray(data.stages) ||
+          data.stages.length === 0 ||
+          !data.stages.every(isAssistantMobileStage)
+        ) {
+          return undefined;
+        }
+
+        return {
+          indicatorGroupLabel: data.indicatorGroupLabel,
+          stages: data.stages,
+        };
+      } catch {
+        return undefined;
+      }
+    };
+    const createAssistantMobileController = () => {
+      const stageData = readAssistantMobileStageData();
+      const desktopContainer = assistantSection.querySelector(":scope > .mx-auto");
+      if (!stageData || !(desktopContainer instanceof HTMLElement)) {
+        return undefined;
+      }
+      const mobileContainer = document.createElement("div");
+      const phoneStack = document.createElement("div");
+      const heading = document.createElement("h2");
+      const stageTitle = document.createElement("h3");
+      const stageDescription = document.createElement("p");
+      const indicators = document.createElement("div");
+      const stageItems: {
+        button: HTMLButtonElement;
+        element: HTMLElement;
+        focusableElements: HTMLElement[];
+        stage: AssistantMobileStage;
+      }[] = [];
+      const originalTabIndex = new WeakMap<HTMLElement, string | null>();
+      const reduceMotionMedia = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+      let activeIndex = 0;
+      let isInViewport = false;
+      let timeoutId: number | undefined;
+      mobileContainer.dataset.assistantMobilePresentation = "true";
+      mobileContainer.setAttribute(
+        "aria-labelledby",
+        "assistant-mobile-stage-title",
+      );
+      mobileContainer.setAttribute(
+        "aria-describedby",
+        "assistant-mobile-stage-description",
+      );
+      phoneStack.dataset.assistantMobilePhoneStack = "true";
+      heading.dataset.assistantMobileHeading = "true";
+      stageTitle.id = "assistant-mobile-stage-title";
+      stageTitle.dataset.assistantMobileTitle = "true";
+      stageDescription.id = "assistant-mobile-stage-description";
+      stageDescription.dataset.assistantMobileDescription = "true";
+      indicators.dataset.assistantMobileIndicators = "true";
+      indicators.setAttribute("role", "group");
+      indicators.setAttribute(
+        "aria-label",
+        stageData.indicatorGroupLabel,
+      );
+      heading.textContent =
+        desktopContainer
+          .querySelector(":scope > [data-assistant-showcase-title]")
+          ?.textContent?.trim() ?? "";
+      stageData.stages.forEach((stage, index) => {
+        const sourcePhone = desktopContainer.querySelector(
+          `[data-assistant-phone="${stage.phone}"]`,
+        );
+        const phone = sourcePhone?.cloneNode(true);
+        if (!(phone instanceof HTMLElement)) {
+          return;
+        }
+        phone.removeAttribute("style");
+        const focusableElements = Array.from(
+          phone.querySelectorAll<HTMLElement>(
+            'a[href], button, input, select, textarea, [tabindex]',
+          ),
+        );
+        focusableElements.forEach((element) => {
+          originalTabIndex.set(element, element.getAttribute("tabindex"));
+        });
+        const stageElement = document.createElement("div");
+        const indicator = document.createElement("button");
+        stageElement.dataset.assistantMobileStage = stage.phone;
+        stageElement.append(phone);
+        indicator.type = "button";
+        indicator.dataset.assistantMobileIndicator = stage.phone;
+        indicator.setAttribute("aria-label", stage.indicatorLabel);
+        indicator.addEventListener("click", () => {
+          setStage(index);
+          scheduleNextStage();
+        });
+        stageItems.push({
+          button: indicator,
+          element: stageElement,
+          focusableElements,
+          stage,
+        });
+      });
+      if (stageItems.length !== stageData.stages.length) {
+        return undefined;
+      }
+      const copy = document.createElement("div");
+      copy.dataset.assistantMobileCopy = "true";
+      stageItems.forEach(({ button, element }) => {
+        phoneStack.append(element);
+        indicators.append(button);
+      });
+      copy.append(heading, stageTitle, stageDescription, indicators);
+      mobileContainer.append(phoneStack, copy);
+      desktopContainer.after(mobileContainer);
+      const clearStageTimeout = () => {
+        if (timeoutId !== undefined) {
+          window.clearTimeout(timeoutId);
+          timeoutId = undefined;
+        }
+      };
+      const canAutoplay = () =>
+        isInViewport && !document.hidden && !reduceMotionMedia.matches;
+      function setStage(index: number) {
+        const nextIndex =
+          ((index % stageItems.length) + stageItems.length) % stageItems.length;
+        const stage = stageItems[nextIndex].stage;
+        activeIndex = nextIndex;
+        stageTitle.textContent = stage.title;
+        stageDescription.textContent = stage.description;
+        stageItems.forEach(
+          ({ button, element, focusableElements }, stageIndex) => {
+            const isActive = stageIndex === activeIndex;
+            element.setAttribute(
+              "aria-hidden",
+              isActive ? "false" : "true",
+            );
+            focusableElements.forEach((focusableElement) => {
+              const tabIndex = originalTabIndex.get(focusableElement);
+              if (isActive) {
+                if (tabIndex === null || tabIndex === undefined) {
+                  focusableElement.removeAttribute("tabindex");
+                } else {
+                  focusableElement.setAttribute("tabindex", tabIndex);
+                }
+              } else {
+                focusableElement.setAttribute("tabindex", "-1");
+              }
+            });
+            if (isActive) {
+              button.setAttribute("aria-current", "step");
+            } else {
+              button.removeAttribute("aria-current");
+            }
+          },
+        );
+      }
+      function scheduleNextStage() {
+        clearStageTimeout();
+        if (!canAutoplay()) {
+          return;
+        }
+        timeoutId = window.setTimeout(() => {
+          setStage(activeIndex + 1);
+          scheduleNextStage();
+        }, 4500);
+      }
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          clearStageTimeout();
+        } else {
+          scheduleNextStage();
+        }
+      };
+      const handleReducedMotionChange = () => scheduleNextStage();
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          isInViewport = Boolean(entry?.isIntersecting);
+          if (isInViewport) {
+            scheduleNextStage();
+          } else {
+            clearStageTimeout();
+          }
+        },
+        {
+          threshold: 0.01,
+        },
+      );
+      setStage(0);
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      reduceMotionMedia.addEventListener("change", handleReducedMotionChange);
+      observer.observe(assistantSection);
+      return () => {
+        clearStageTimeout();
+        observer.disconnect();
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        reduceMotionMedia.removeEventListener(
+          "change",
+          handleReducedMotionChange,
+        );
+        mobileContainer.remove();
+      };
+    };
+    const syncAssistantMobileController = () => {
+      if (assistantMobileMedia.matches) {
+        assistantMobileCleanup ??= createAssistantMobileController();
+      } else if (assistantMobileCleanup) {
+        assistantMobileCleanup();
+        assistantMobileCleanup = undefined;
+      }
+    };
+
+    assistantMobileMedia.addEventListener(
+      "change",
+      syncAssistantMobileController,
+    );
+    window.addEventListener("pagehide", () => {
+      assistantMobileCleanup?.();
+      assistantMobileCleanup = undefined;
+    });
+    window.addEventListener("pageshow", syncAssistantMobileController);
+    syncAssistantMobileController();
+  }
 </script>
 
 <style>
@@ -751,5 +1022,44 @@ const t = getTranslations(locale);
       transform: none;
       animation: none;
     }
+  }
+
+  :global(#assistant [data-assistant-mobile-presentation]) {
+    display: none;
+  }
+
+  @media (max-width: 1100px) {
+    :global(#assistant > .mx-auto) { display: none; }
+    :global(#assistant [data-assistant-mobile-presentation]) {
+      --assistant-mobile-min-height: 450px;
+      --assistant-mobile-phone-height: 390px;
+      --assistant-mobile-phone-width: 190px;
+      align-items: center;
+      display: grid;
+      gap: 28px;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, 260px), 1fr)
+      );
+      justify-items: center;
+      margin-inline: auto;
+      min-height: var(--assistant-mobile-min-height);
+      padding-inline: 20px;
+      width: min(100%, 680px);
+    }
+    :global(#assistant [data-assistant-mobile-phone-stack]) {
+      height: var(--assistant-mobile-phone-height);
+      position: relative;
+      width: var(--assistant-mobile-phone-width);
+    }
+    :global(#assistant [data-assistant-mobile-stage]) { display: grid; inset: 0; place-items: center; position: absolute; }
+    :global(#assistant [data-assistant-mobile-stage][aria-hidden="true"]) { display: none; }
+    :global(#assistant [data-assistant-mobile-copy]) { color: var(--color-text); display: grid; font-family: var(--font-family-sans); gap: 12px; min-width: 0; }
+    :global(#assistant [data-assistant-mobile-heading]) { font-size: var(--font-size-body-large); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-body); line-height: 1.2; margin: 0; }
+    :global(#assistant [data-assistant-mobile-title]) { font-size: 32px; font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-heading); line-height: 1.05; margin: 0; }
+    :global(#assistant [data-assistant-mobile-description]) { font-size: var(--font-size-body); letter-spacing: var(--letter-spacing-body); line-height: 1.5; margin: 0; max-width: 32rem; }
+    :global(#assistant [data-assistant-mobile-indicators]) { display: flex; gap: 10px; margin-top: 4px; }
+    :global(#assistant [data-assistant-mobile-indicator]) { background: color-mix(in srgb, var(--color-text) 28%, transparent); border: 0; border-radius: 999px; cursor: pointer; height: 6px; width: 38px; }
+    :global(#assistant [data-assistant-mobile-indicator][aria-current="step"]) { background: var(--color-text); }
   }
 </style>

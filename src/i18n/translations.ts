@@ -337,15 +337,42 @@ export const translations = {
           "After the month ends, Assistant will help",
         improveNextPeriodDescriptionLine2: "adjust the plan.",
       },
-      assistantShowcase: {
-        title: "How the assistant works",
-        subtitles: {
-          diagnosis: "Diagnosis",
-          planDeviation: "Plan deviation",
-          recommendedActions: "Recommended actions",
-          planOutcome: "Plan outcome",
-        },
-      },
+ assistantShowcase: {
+  title: "How the assistant works",
+  mobileIndicatorGroupLabel: "Assistant stages",
+  subtitles: {
+    diagnosis: "Diagnosis",
+    planDeviation: "Plan deviation",
+    recommendedActions: "Recommended actions",
+    planOutcome: "Plan outcome",
+  },
+  mobileStages: {
+    diagnosis: {
+      title: "Diagnosis",
+      description:
+        "The assistant compares the plan, actual spending, and forecast to show where the month is drifting.",
+      indicatorLabel: "Show diagnosis",
+    },
+    optimization: {
+      title: "Optimization",
+      description:
+        "It identifies the funds creating the gap and the changes that will have the greatest effect.",
+      indicatorLabel: "Show optimization",
+    },
+    forecast: {
+      title: "Forecast",
+      description:
+        "It shows how the financial result may change after the recommended adjustments.",
+      indicatorLabel: "Show forecast",
+    },
+    recoveryPlan: {
+      title: "Recovery plan",
+      description:
+        "It turns the analysis into a clear sequence of actions for restoring the financial plan.",
+      indicatorLabel: "Show recovery plan",
+    },
+  },
+},
       features: {
         eyebrow: "Everything connected",
         title: "Everything you need to manage your money",
@@ -1057,15 +1084,42 @@ export const translations = {
           "Après la fin du mois, Assistant aidera",
         improveNextPeriodDescriptionLine2: "à ajuster le plan.",
       },
-      assistantShowcase: {
-        title: "Comment fonctionne l'assistant",
-        subtitles: {
-          diagnosis: "Diagnostic",
-          planDeviation: "Écart au plan",
-          recommendedActions: "Actions recommandées",
-          planOutcome: "Résultat du plan",
-        },
-      },
+ assistantShowcase: {
+  title: "Comment fonctionne l'assistant",
+  mobileIndicatorGroupLabel: "Étapes de l'assistant",
+  subtitles: {
+    diagnosis: "Diagnostic",
+    planDeviation: "Écart au plan",
+    recommendedActions: "Actions recommandées",
+    planOutcome: "Résultat du plan",
+  },
+  mobileStages: {
+    diagnosis: {
+      title: "Diagnostic",
+      description:
+        "L'assistant compare le plan, le réel et la prévision pour montrer où le mois dérive.",
+      indicatorLabel: "Afficher le diagnostic",
+    },
+    optimization: {
+      title: "Optimisation",
+      description:
+        "Il repère les fonds qui créent l'écart et les changements qui auront le plus d'effet.",
+      indicatorLabel: "Afficher l'optimisation",
+    },
+    forecast: {
+      title: "Prévision",
+      description:
+        "Il montre comment le résultat financier peut évoluer après les ajustements recommandés.",
+      indicatorLabel: "Afficher la prévision",
+    },
+    recoveryPlan: {
+      title: "Plan de rétablissement",
+      description:
+        "Il transforme l'analyse en une suite d'actions claire pour rétablir le plan financier.",
+      indicatorLabel: "Afficher le plan de rétablissement",
+    },
+  },
+},
       features: {
         eyebrow: "Tout est connecté",
         title: "Tout ce qu'il faut pour gérer votre argent",
@@ -1779,15 +1833,42 @@ export const translations = {
           "После завершения месяца Assistant",
         improveNextPeriodDescriptionLine2: "поможет скорректировать план.",
       },
-      assistantShowcase: {
-        title: "Как работает ассистент",
-        subtitles: {
-          diagnosis: "Диагностика",
-          planDeviation: "Отклонение от плана",
-          recommendedActions: "Рекомендуемые действия",
-          planOutcome: "Итог плана",
-        },
-      },
+assistantShowcase: {
+  title: "Как работает ассистент",
+  mobileIndicatorGroupLabel: "Этапы ассистента",
+  subtitles: {
+    diagnosis: "Диагностика",
+    planDeviation: "Отклонение от плана",
+    recommendedActions: "Рекомендуемые действия",
+    planOutcome: "Результат плана",
+  },
+  mobileStages: {
+    diagnosis: {
+      title: "Диагностика",
+      description:
+        "Ассистент сравнивает план, фактические данные и прогноз, чтобы показать, где месяц начинает отклоняться.",
+      indicatorLabel: "Показать диагностику",
+    },
+    optimization: {
+      title: "Оптимизация",
+      description:
+        "Он определяет фонды, создающие отклонение, и изменения, которые дадут наибольший эффект.",
+      indicatorLabel: "Показать оптимизацию",
+    },
+    forecast: {
+      title: "Прогноз",
+      description:
+        "Он показывает, как может измениться финансовый результат после рекомендуемых действий.",
+      indicatorLabel: "Показать прогноз",
+    },
+    recoveryPlan: {
+      title: "План восстановления",
+      description:
+        "Он превращает анализ в понятную последовательность действий для восстановления финансового плана.",
+      indicatorLabel: "Показать план восстановления",
+    },
+  },
+},
       features: {
         eyebrow: "Все связано",
         title: "Все, что нужно для управления деньгами",
