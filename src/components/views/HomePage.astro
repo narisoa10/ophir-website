@@ -18,11 +18,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getTranslations(locale);
-const assistantMobileStages = [
-  { phone: "1", ...t.home.assistantShowcase.mobileStages.diagnosis }, { phone: "2", ...t.home.assistantShowcase.mobileStages.optimization },
-  { phone: "4", ...t.home.assistantShowcase.mobileStages.forecast }, { phone: "3", ...t.home.assistantShowcase.mobileStages.recoveryPlan },
-];
-const assistantMobileStageJson = JSON.stringify({ indicatorGroupLabel: t.home.assistantShowcase.mobileIndicatorGroupLabel, stages: assistantMobileStages });
 ---
 
 <BaseLayout
@@ -79,7 +74,6 @@ const assistantMobileStageJson = JSON.stringify({ indicatorGroupLabel: t.home.as
     <p>{t.home.assistantShowcase.subtitles.planOutcome}</p>
   </template>
 
-  <script id="assistant-mobile-stage-data" type="application/json" set:html={assistantMobileStageJson}></script>
 </BaseLayout>
 
 <script>
