@@ -12,12 +12,14 @@ interface Props {
   locale: Locale;
   title?: string;
   description?: string;
+  headerVariant?: "default" | "none";
 }
 
 const {
   locale,
   title = siteConfig.title,
   description = siteConfig.description,
+  headerVariant = "default",
 } = Astro.props;
 
 const canonicalUrl = Astro.site
@@ -132,7 +134,7 @@ const localizedRoutePath = routeSegments.length
 
   <body>
     <div class="site-shell">
-      <Header locale={locale} />
+      {headerVariant !== "none" && <Header locale={locale} />}
 
       <main class="site-shell__main">
         <slot />
