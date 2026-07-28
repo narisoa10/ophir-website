@@ -319,7 +319,7 @@
     --home-hero-description-margin-top: var(--space-4);
     --home-hero-actions-gap: 14px;
     --home-hero-actions-margin-top: calc(
-      var(--space-16) + var(--space-8) + var(--space-5)
+      var(--space-16) + var(--space-8) + var(--space-10)
     );
     --home-hero-button-height: 40px;
     --home-hero-button-padding-inline: var(--space-4);
