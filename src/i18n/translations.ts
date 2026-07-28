@@ -345,6 +345,19 @@ export const translations = {
           recommendedActions: "Recommended actions",
           planOutcome: "Plan outcome",
         },
+        indicatorGroupLabel: "Assistant stages",
+        descriptions: {
+          diagnosis: "A quick analysis of your recent activity and balances.",
+          planDeviation: "Highlights where the current plan is off track.",
+          recommendedActions: "Practical next steps to improve the plan.",
+          planOutcome: "Projected result if you follow the recommended actions.",
+        },
+        indicatorLabels: {
+          diagnosis: "Diagnosis",
+          planDeviation: "Plan deviation",
+          recommendedActions: "Actions",
+          planOutcome: "Outcome",
+        },
       },
       features: {
         eyebrow: "Everything connected",
@@ -1064,6 +1077,19 @@ export const translations = {
           planDeviation: "Écart au plan",
           recommendedActions: "Actions recommandées",
           planOutcome: "Résultat du plan",
+        },
+        indicatorGroupLabel: "Étapes de l'assistant",
+        descriptions: {
+          diagnosis: "Une brève analyse de votre activité récente et des soldes.",
+          planDeviation: "Met en évidence où le plan actuel est hors cible.",
+          recommendedActions: "Étapes pratiques pour améliorer le plan.",
+          planOutcome: "Résultat projeté si vous suivez les actions recommandées.",
+        },
+        indicatorLabels: {
+          diagnosis: "Diagnostic",
+          planDeviation: "Écart",
+          recommendedActions: "Actions",
+          planOutcome: "Résultat",
         },
       },
       features: {
@@ -1786,6 +1812,19 @@ export const translations = {
           planDeviation: "Отклонение от плана",
           recommendedActions: "Рекомендуемые действия",
           planOutcome: "Итог плана",
+        },
+        indicatorGroupLabel: "Этапы ассистента",
+        descriptions: {
+          diagnosis: "Краткий анализ недавней активности и баланса.",
+          planDeviation: "Показывает, где план отклонился от цели.",
+          recommendedActions: "Практические шаги для улучшения плана.",
+          planOutcome: "Ожидаемый результат при выполнении рекомендаций.",
+        },
+        indicatorLabels: {
+          diagnosis: "Диагностика",
+          planDeviation: "Отклонение",
+          recommendedActions: "Действия",
+          planOutcome: "Итог",
         },
       },
       features: {
