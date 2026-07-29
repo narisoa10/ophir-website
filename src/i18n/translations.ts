@@ -1,5 +1,6 @@
 import type { Locale } from "./config";
 import { aboutContent } from "./about";
+import { contactContent } from "./contact";
 import { privacyPolicyContent } from "./privacy-policy";
 import { termsOfServiceContent } from "./terms-of-service";
 
@@ -66,7 +67,7 @@ export const translations = {
         ...aboutContent.en,
       },
       contact: {
-        title: "Contact",
+        ...contactContent.en,
       },
       trust: {
         title: "Trust",
@@ -829,7 +830,7 @@ export const translations = {
         ...aboutContent.fr,
       },
       contact: {
-        title: "Contact",
+        ...contactContent.fr,
       },
       trust: {
         title: "Trust",
@@ -1596,7 +1597,7 @@ export const translations = {
         ...aboutContent.ru,
       },
       contact: {
-        title: "Контакты",
+        ...contactContent.ru,
       },
       trust: {
         title: "Надёжность",

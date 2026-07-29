@@ -51,6 +51,13 @@ type DocumentBlock =
       text: string;
     }
   | {
+      type: "contactCards";
+      cards: readonly {
+        title: string;
+        blocks: readonly DocumentBlock[];
+      }[];
+    }
+  | {
       type: "paragraph";
       text?: string;
       content?: readonly InlineContent[];
@@ -63,6 +70,10 @@ type DocumentBlock =
       type: "table";
       headers: readonly string[];
       rows: readonly (readonly string[])[];
+    }
+  | {
+      type: "address";
+      content: readonly InlineContent[];
     }
   | {
       type: "email";
@@ -213,6 +224,88 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                       return <h3>{block.text}</h3>;
                     }
 
+                    if (block.type === "contactCards") {
+                      return (
+                        <div class="internal-page__contact-cards">
+                          {block.cards.map((card) => (
+                            <article class="internal-page__contact-card">
+                              <h3>{card.title}</h3>
+
+                              {card.blocks.map((cardBlock) => {
+                                if (cardBlock.type === "paragraph") {
+                                  return (
+                                    <p>
+                                      {getInlineParts(cardBlock.content ?? cardBlock.text).map((part) => {
+                                        if (part.type === "strong") {
+                                          return <strong>{part.text}</strong>;
+                                        }
+
+                                        if (part.type === "internalLink") {
+                                          return (
+                                            <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                              {part.text}
+                                            </a>
+                                          );
+                                        }
+
+                                        if (part.type === "emailLink") {
+                                          return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                                        }
+
+                                        return getTextLines(part.text).map((line, index) => (
+                                          <>
+                                            {index > 0 && <br />}
+                                            {line}
+                                          </>
+                                        ));
+                                      })}
+                                    </p>
+                                  );
+                                }
+
+                                if (cardBlock.type === "list") {
+                                  return (
+                                    <ul class="internal-page__list">
+                                      {cardBlock.items.map((item) => (
+                                        <li>
+                                          {getInlineParts(item).map((part) => {
+                                            if (part.type === "strong") {
+                                              return <strong>{part.text}</strong>;
+                                            }
+
+                                            if (part.type === "internalLink") {
+                                              return (
+                                                <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                                  {part.text}
+                                                </a>
+                                              );
+                                            }
+
+                                            if (part.type === "emailLink") {
+                                              return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                                            }
+
+                                            return getTextLines(part.text).map((line, index) => (
+                                              <>
+                                                {index > 0 && <br />}
+                                                {line}
+                                              </>
+                                            ));
+                                          })}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  );
+                                }
+
+                                return null;
+                              })}
+                            </article>
+                          ))}
+                        </div>
+                      );
+                    }
+
                     if (block.type === "paragraph") {
                       return (
                         <p>
@@ -302,6 +395,37 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                             </tbody>
                           </table>
                         </div>
+                      );
+                    }
+
+                    if (block.type === "address") {
+                      return (
+                        <address class="internal-page__address">
+                          {getInlineParts(block.content).map((part) => {
+                            if (part.type === "strong") {
+                              return <strong>{part.text}</strong>;
+                            }
+
+                            if (part.type === "internalLink") {
+                              return (
+                                <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                  {part.text}
+                                </a>
+                              );
+                            }
+
+                            if (part.type === "emailLink") {
+                              return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                            }
+
+                            return getTextLines(part.text).map((line, index) => (
+                              <>
+                                {index > 0 && <br />}
+                                {line}
+                              </>
+                            ));
+                          })}
+                        </address>
                       );
                     }
 
