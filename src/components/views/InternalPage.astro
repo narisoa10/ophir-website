@@ -1,5 +1,8 @@
 ---
-import type { InternalPageKey } from "../../config/site-routes";
+import {
+  getLocalizedInternalPageHref,
+  type InternalPageKey,
+} from "../../config/site-routes";
 import { siteConfig } from "../../config/site";
 import type { Locale } from "../../i18n/config";
 import { getTranslations } from "../../i18n/translations";
@@ -22,14 +25,39 @@ interface DocumentSection {
   blocks?: readonly DocumentBlock[];
 }
 
-type DocumentBlock =
+type InlineContent =
   | {
-      type: "paragraph";
+      type: "text";
       text: string;
     }
   | {
+      type: "strong";
+      text: string;
+    }
+  | {
+      type: "internalLink";
+      text: string;
+      page: InternalPageKey;
+    }
+  | {
+      type: "emailLink";
+      text: string;
+      email: string;
+    };
+
+type DocumentBlock =
+  | {
+      type: "subheading";
+      text: string;
+    }
+  | {
+      type: "paragraph";
+      text?: string;
+      content?: readonly InlineContent[];
+    }
+  | {
       type: "list";
-      items: readonly string[];
+      items: readonly (string | readonly InlineContent[])[];
     }
   | {
       type: "table";
@@ -46,9 +74,11 @@ interface DocumentPage {
   title: string;
   seoTitle?: string;
   description?: string;
+  showDescription?: boolean;
   updatedLabel?: string;
   updated?: string;
   updatedDate?: string;
+  intro?: readonly DocumentBlock[];
   sections?: readonly DocumentSection[];
 }
 
@@ -59,6 +89,19 @@ const pageDescription = documentPage.description ?? siteConfig.description;
 
 function getTextLines(text: string) {
   return text.split("\n");
+}
+
+function getInlineParts(content: string | readonly InlineContent[] | undefined) {
+  if (typeof content === "string") {
+    return [
+      {
+        type: "text",
+        text: content,
+      },
+    ] as const;
+  }
+
+  return content ?? [];
 }
 ---
 
@@ -81,7 +124,7 @@ function getTextLines(text: string) {
         </h1>
 
         {
-          documentPage.description && (
+          documentPage.description && documentPage.showDescription !== false && (
             <p class="internal-page__description">
               {documentPage.description}
             </p>
@@ -100,6 +143,47 @@ function getTextLines(text: string) {
                 documentPage.updated
               )}
             </p>
+          )
+        }
+
+        {
+          documentPage.intro && (
+            <div class="internal-page__intro">
+              {documentPage.intro.map((block) => {
+                if (block.type === "paragraph") {
+                  return (
+                    <p>
+                      {getInlineParts(block.content ?? block.text).map((part) => {
+                        if (part.type === "strong") {
+                          return <strong>{part.text}</strong>;
+                        }
+
+                        if (part.type === "internalLink") {
+                          return (
+                            <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                              {part.text}
+                            </a>
+                          );
+                        }
+
+                        if (part.type === "emailLink") {
+                          return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                        }
+
+                        return getTextLines(part.text).map((line, index) => (
+                          <>
+                            {index > 0 && <br />}
+                            {line}
+                          </>
+                        ));
+                      })}
+                    </p>
+                  );
+                }
+
+                return null;
+              })}
+            </div>
           )
         }
 
@@ -125,15 +209,37 @@ function getTextLines(text: string) {
                   ))}
 
                   {section.blocks?.map((block) => {
+                    if (block.type === "subheading") {
+                      return <h3>{block.text}</h3>;
+                    }
+
                     if (block.type === "paragraph") {
                       return (
                         <p>
-                          {getTextLines(block.text).map((line, index) => (
-                            <>
-                              {index > 0 && <br />}
-                              {line}
-                            </>
-                          ))}
+                          {getInlineParts(block.content ?? block.text).map((part) => {
+                            if (part.type === "strong") {
+                              return <strong>{part.text}</strong>;
+                            }
+
+                            if (part.type === "internalLink") {
+                              return (
+                                <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                  {part.text}
+                                </a>
+                              );
+                            }
+
+                            if (part.type === "emailLink") {
+                              return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                            }
+
+                            return getTextLines(part.text).map((line, index) => (
+                              <>
+                                {index > 0 && <br />}
+                                {line}
+                              </>
+                            ));
+                          })}
                         </p>
                       );
                     }
@@ -142,7 +248,32 @@ function getTextLines(text: string) {
                       return (
                         <ul class="internal-page__list">
                           {block.items.map((item) => (
-                            <li>{item}</li>
+                            <li>
+                              {getInlineParts(item).map((part) => {
+                                if (part.type === "strong") {
+                                  return <strong>{part.text}</strong>;
+                                }
+
+                                if (part.type === "internalLink") {
+                                  return (
+                                    <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                      {part.text}
+                                    </a>
+                                  );
+                                }
+
+                                if (part.type === "emailLink") {
+                                  return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                                }
+
+                                return getTextLines(part.text).map((line, index) => (
+                                  <>
+                                    {index > 0 && <br />}
+                                    {line}
+                                  </>
+                                ));
+                              })}
+                            </li>
                           ))}
                         </ul>
                       );
