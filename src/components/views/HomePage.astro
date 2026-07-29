@@ -29,7 +29,7 @@ const assistantShowcaseScript = `;(window.__ophirTranslations = window.__ophirTr
 >
   <HomeHero locale={locale} content={t.home.hero} />
 
-  <TransitionMarquee />
+  <TransitionMarquee content={t.home.transitionMarquee} />
 
   <HomeHowItWorks content={t.home.productOverview} />
 
@@ -817,11 +817,53 @@ const assistantShowcaseScript = `;(window.__ophirTranslations = window.__ophirTr
   :global(#assistant) {
     --assistant-section-padding-bottom: 32px;
     --assistant-section-padding-top: 6px;
-    background: var(--color-primary);
+    position: relative;
+    isolation: isolate;
+    background: var(--color-surface-elevated);
+    box-shadow:
+      inset 0 0 0 0.5px
+        color-mix(in srgb, var(--color-primary-hover) 28%, var(--color-border));
     padding-block:
       var(--assistant-section-padding-top)
       var(--assistant-section-padding-bottom);
     overflow: visible;
+  }
+
+  :global(#assistant::before) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background:
+      radial-gradient(
+        ellipse 78% 92% at 22% 18%,
+        color-mix(in srgb, var(--color-primary) 46%, transparent) 0%,
+        color-mix(in srgb, var(--color-warning) 18%, transparent) 46%,
+        transparent 74%
+      ),
+      radial-gradient(
+        ellipse 74% 84% at 52% 46%,
+        color-mix(in srgb, var(--color-warning) 28%, transparent) 0%,
+        color-mix(in srgb, var(--color-surface-elevated) 62%, transparent) 48%,
+        transparent 76%
+      ),
+      radial-gradient(
+        ellipse 86% 72% at 50% 104%,
+        color-mix(in srgb, var(--color-danger) 28%, transparent) 0%,
+        color-mix(in srgb, var(--color-primary-hover) 12%, transparent) 46%,
+        transparent 76%
+      );
+    filter: blur(32px);
+    opacity: 0.82;
+    pointer-events: none;
+    transform: scale(1.04);
+  }
+
+  :global(#assistant > .mx-auto),
+  :global(#assistant [data-assistant-mobile-presentation]) {
+    position: relative;
+    z-index: 1;
   }
 
   :global(#assistant > .mx-auto) {
@@ -946,8 +988,23 @@ const assistantShowcaseScript = `;(window.__ophirTranslations = window.__ophirTr
     }
 
       :global(#assistant) {
+        background:
+          radial-gradient(
+            ellipse 82% 62% at 50% 38%,
+            color-mix(in srgb, var(--color-primary-hover) 34%, transparent) 0%,
+            color-mix(in srgb, var(--color-primary) 24%, transparent) 34%,
+            color-mix(in srgb, var(--color-primary) 12%, transparent) 58%,
+            transparent 86%
+          ),
+          var(--color-surface-elevated);
+        box-shadow:
+          inset 0 0 0 1px
+            color-mix(in srgb, var(--color-primary-hover) 24%, var(--color-border));
         overflow: visible;
         height: auto;
+      }
+      :global(#assistant::before) {
+        display: none;
       }
       :global(#assistant [data-assistant-mobile-phone-stack]) {
         height: 390px;

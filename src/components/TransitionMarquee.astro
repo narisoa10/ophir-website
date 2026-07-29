@@ -1,25 +1,30 @@
 ---
-const marqueeItems = [
-  {
-    icon: "chart",
-    text: "Видьте полную картину своих финансов",
-  },
-  {
-    icon: "calendar",
-    text: "Планируйте бюджет заранее",
-  },
-  {
-    icon: "shield-alert",
-    text: "Предотвращайте финансовые трудности",
-  },
-  {
-    icon: "shield-check",
-    text: "Чувствуйте спокойствие и уверенность в будущем",
-  },
+interface Props {
+  content: {
+    ariaLabel: string;
+    items: readonly string[];
+  };
+}
+
+const { content } = Astro.props;
+
+const marqueeIcons = [
+  "chart",
+  "calendar",
+  "shield-alert",
+  "shield-check",
 ] as const;
+
+const marqueeItems = content.items.map((text, index) => ({
+  icon: marqueeIcons[index],
+  text,
+}));
 ---
 
-<section class="transition-marquee home-hero-section" aria-label="Ключевые возможности OPHIR">
+<section
+  class="transition-marquee home-hero-section"
+  aria-label={content.ariaLabel}
+>
   <div class="transition-marquee__viewport">
     <div class="transition-marquee__track">
       {

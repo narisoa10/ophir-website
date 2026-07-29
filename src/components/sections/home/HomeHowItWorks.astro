@@ -12,20 +12,20 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<section class="home-hero-section home-how-it-works-section">
-  <div class="home-hero home-how-it-works">
-    <div class="home-hero__inner home-how-it-works__inner">
-      <div class="home-hero__media home-how-it-works__media" aria-hidden="true">
+<section class="home-how-it-works-section">
+  <div class="home-how-it-works">
+    <div class="home-how-it-works__inner">
+      <div class="home-how-it-works__media" aria-hidden="true">
         <img
           src={siteAssets.homeHowOphirWorks}
           alt=""
-          class="home-hero__image home-how-it-works__image"
+          class="home-how-it-works__image"
           loading="lazy"
           decoding="async"
         />
       </div>
 
-      <div class="home-hero__copy home-how-it-works__copy">
+      <div class="home-how-it-works__copy">
         <p class="home-how-it-works__eyebrow">
           {content.eyebrow}
         </p>
@@ -49,12 +49,90 @@ const { content } = Astro.props;
 </section>
 
 <style>
+  .home-how-it-works-section {
+    --home-how-it-works-section-max-width: 1180px;
+    --home-how-it-works-section-inline-gutter: var(--space-12);
+    --home-how-it-works-section-margin-top: var(--space-8);
+    --home-how-it-works-section-margin-bottom: var(--space-16);
+    --home-how-it-works-card-radius: var(--space-7);
+    --home-how-it-works-background:
+      radial-gradient(
+        ellipse at 56% 48%,
+        color-mix(in srgb, #ffffff 100%, transparent) 0%,
+        color-mix(in srgb, #ffe8bc 84%, transparent) 74%,
+        transparent 100%
+      ),
+      radial-gradient(
+        circle at 24% 14%,
+        color-mix(in srgb, #ffffff 76%, transparent) 0%,
+        color-mix(in srgb, #fff3dc 34%, transparent) 42%,
+        transparent 64%
+      ),
+      radial-gradient(
+        circle at 96% 96%,
+        color-mix(in srgb, #a95f1f 46%, transparent) 0%,
+        color-mix(in srgb, #c9792b 32%, transparent) 44%,
+        transparent 76%
+      ),
+      #f5e1c8;
+    --home-how-it-works-shadow: 0 20px 64px rgba(15, 23, 42, 0.14);
+    --home-how-it-works-color-text: #09162b;
+    --home-how-it-works-color-muted: #374151;
+    --home-how-it-works-image-position: 61% 48%;
+    --home-how-it-works-inner-columns: minmax(0, 1fr) minmax(460px, 1fr);
+    --home-how-it-works-inner-gap: var(--space-10);
+    --home-how-it-works-inner-padding-block: var(--space-8);
+    --home-how-it-works-inner-padding-inline: var(--space-10);
+    --home-how-it-works-media-height: 360px;
+    --home-how-it-works-media-radius: var(--radius-lg);
+    --home-how-it-works-copy-max-width: 520px;
+    --home-how-it-works-description-max-width: 500px;
+
+    width: min(
+      calc(100% - var(--home-how-it-works-section-inline-gutter)),
+      var(--home-how-it-works-section-max-width)
+    );
+    margin:
+      var(--home-how-it-works-section-margin-top)
+      auto
+      var(--home-how-it-works-section-margin-bottom);
+  }
+
+  .home-how-it-works {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: var(--home-how-it-works-card-radius);
+    background: var(--home-how-it-works-background);
+    box-shadow: var(--home-how-it-works-shadow);
+    color: var(--home-how-it-works-color-text);
+  }
+
   .home-how-it-works__inner {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: var(--home-how-it-works-inner-columns);
+    width: 100%;
     align-items: center;
+    gap: var(--home-how-it-works-inner-gap);
+    padding:
+      var(--home-how-it-works-inner-padding-block)
+      var(--home-how-it-works-inner-padding-inline);
+  }
+
+  .home-how-it-works__media {
+    width: 100%;
+    min-width: 0;
+    height: var(--home-how-it-works-media-height);
+    overflow: hidden;
+    border-radius: var(--home-how-it-works-media-radius);
   }
 
   .home-how-it-works__copy {
-    width: min(100%, var(--home-hero-copy-max-width));
+    width: min(100%, var(--home-how-it-works-copy-max-width));
     align-self: center;
     justify-self: center;
   }
@@ -70,9 +148,9 @@ const { content } = Astro.props;
   }
 
   .home-how-it-works__title {
-    max-width: var(--home-hero-description-max-width);
+    max-width: var(--home-how-it-works-description-max-width);
     margin: var(--space-4) 0 0;
-    color: var(--home-hero-color-text);
+    color: var(--home-how-it-works-color-text);
     font-family: var(--font-family-display);
     font-size: var(--font-size-display);
     font-weight: var(--font-weight-bold);
@@ -83,7 +161,7 @@ const { content } = Astro.props;
 
   .home-how-it-works__assurance {
     margin-top: var(--space-8);
-    color: var(--home-hero-color-muted);
+    color: var(--home-how-it-works-color-muted);
   }
 
   .home-how-it-works__assurance-line {
@@ -100,7 +178,50 @@ const { content } = Astro.props;
   }
 
   .home-how-it-works__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--home-how-it-works-image-position);
     border-radius: inherit;
+  }
+
+  @media (max-width: 1100px) {
+    .home-how-it-works-section {
+      --home-how-it-works-section-max-width: 960px;
+      --home-how-it-works-section-inline-gutter: var(--space-8);
+      --home-how-it-works-section-margin-top: 18px;
+      --home-how-it-works-section-margin-bottom: 52px;
+      --home-how-it-works-inner-columns: minmax(0, 1fr) minmax(360px, 0.9fr);
+      --home-how-it-works-inner-gap: var(--space-8);
+      --home-how-it-works-inner-padding-block: var(--space-6);
+      --home-how-it-works-inner-padding-inline: var(--space-8);
+      --home-how-it-works-media-height: 340px;
+      --home-how-it-works-copy-max-width: 470px;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .home-how-it-works-section {
+      --home-how-it-works-section-inline-gutter: var(--space-4);
+      --home-how-it-works-section-margin-top: var(--space-3);
+      --home-how-it-works-section-margin-bottom: var(--space-10);
+      --home-how-it-works-card-radius: var(--radius-lg);
+      --home-how-it-works-inner-columns: 1fr;
+      --home-how-it-works-inner-gap: var(--space-5);
+      --home-how-it-works-inner-padding-block: var(--space-7);
+      --home-how-it-works-inner-padding-inline: var(--space-5);
+      --home-how-it-works-media-height: auto;
+      --home-how-it-works-image-position: 64% 48%;
+    }
+
+    .home-how-it-works__copy {
+      width: 100%;
+    }
+
+    .home-how-it-works__media {
+      aspect-ratio: 16 / 10;
+    }
   }
 
 </style>

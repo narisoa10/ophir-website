@@ -161,6 +161,15 @@ export const translations = {
           "Built for individuals and families.",
         ],
       },
+      transitionMarquee: {
+        ariaLabel: "Key OPHIR capabilities",
+        items: [
+          "See your full financial picture",
+          "Plan your budget ahead of time",
+          "Prevent financial stress before it grows",
+          "Feel calmer and more confident about what comes next",
+        ],
+      },
       dataAccess: {
         eyebrow: "Data access",
         title: "How OPHIR works with your data",
@@ -893,6 +902,15 @@ export const translations = {
         assurance: [
           "Fonctionne avec les comptes connectés et manuels.",
           "Conçu pour les individus et les familles.",
+        ],
+      },
+      transitionMarquee: {
+        ariaLabel: "Capacités clés d'OPHIR",
+        items: [
+          "Visualisez l'ensemble de vos finances",
+          "Planifiez votre budget à l'avance",
+          "Prévenez les tensions financières",
+          "Avancez avec plus de calme et de confiance",
         ],
       },
       dataAccess: {
@@ -1628,6 +1646,15 @@ export const translations = {
         assurance: [
           "Работает с подключенными и ручными счетами.",
           "Создан для отдельных пользователей и семей.",
+        ],
+      },
+      transitionMarquee: {
+        ariaLabel: "Ключевые возможности OPHIR",
+        items: [
+          "Видьте полную картину своих финансов",
+          "Планируйте бюджет заранее",
+          "Предотвращайте финансовое напряжение",
+          "Чувствуйте больше спокойствия и уверенности",
         ],
       },
       dataAccess: {
