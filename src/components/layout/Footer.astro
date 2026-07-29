@@ -1,10 +1,7 @@
 ---
 import { footerNavigationGroups } from "../../config/footer-navigation";
 import { siteConfig } from "../../config/site";
-import {
-  getLocalizedHomeSectionHref,
-  getLocalizedInternalPageHref,
-} from "../../config/site-routes";
+import { getLocalizedInternalPageHref } from "../../config/site-routes";
 import type { Locale } from "../../i18n/config";
 import OphirLogo from "../brand/OphirLogo.astro";
 import Container from "./Container.astro";
@@ -13,9 +10,6 @@ interface FooterContent {
   ariaLabel: string;
   brandLabel: string;
   description: string;
-  contactLabel: string;
-  emailLabel: string;
-  addressLabel: string;
   groups: Record<(typeof footerNavigationGroups)[number]["key"], string>;
   links: Record<
     (typeof footerNavigationGroups)[number]["links"][number]["key"],
@@ -33,16 +27,10 @@ interface Props {
 
 const { locale, content } = Astro.props;
 const currentYear = new Date().getFullYear();
-const contactEmails = Object.values(siteConfig.contacts);
-const address = siteConfig.address;
 
 function getFooterHref(
   link: (typeof footerNavigationGroups)[number]["links"][number]
 ) {
-  if (link.type === "homeSection") {
-    return getLocalizedHomeSectionHref(locale, link.section);
-  }
-
   return getLocalizedInternalPageHref(locale, link.page);
 }
 ---
@@ -65,49 +53,6 @@ function getFooterHref(
         <p class="site-footer__description">
           {content.description}
         </p>
-
-        <section class="site-footer__contact" aria-labelledby="site-footer-contact">
-          <h2 id="site-footer-contact" class="site-footer__contact-label">
-            {content.contactLabel}
-          </h2>
-
-          <div class="site-footer__contact-grid">
-            <div class="site-footer__contact-group">
-              <p class="site-footer__contact-subtitle">
-                {content.emailLabel}
-              </p>
-
-              <ul class="site-footer__email-list">
-                {
-                  contactEmails.map((email) => (
-                    <li>
-                      <a
-                        href={`mailto:${email}`}
-                        class="site-footer__contact-link"
-                      >
-                        {email}
-                      </a>
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-
-            <div class="site-footer__contact-group">
-              <p class="site-footer__contact-subtitle">
-                {content.addressLabel}
-              </p>
-
-              <address class="site-footer__address">
-                <span>{address.street}</span>
-                <span>
-                  {address.city}, {address.region} {address.postalCode}
-                </span>
-                <span>{address.country}</span>
-              </address>
-            </div>
-          </div>
-        </section>
       </div>
 
       <nav

@@ -19,58 +19,58 @@ export type FooterNavigationLink =
 
 export const footerNavigationGroups = [
   {
-    key: "product",
+    key: "company",
     links: [
       {
-        key: "features",
-        type: "homeSection",
-        section: "features",
+        key: "about",
+        type: "internalPage",
+        page: "about",
       },
       {
-        key: "assistant",
-        type: "homeSection",
-        section: "assistant",
+        key: "contact",
+        type: "internalPage",
+        page: "contact",
       },
-      {
-        key: "dataAccess",
-        type: "homeSection",
-        section: "dataAccess",
-      },
+    ],
+  },
+  {
+    key: "support",
+    links: [
       {
         key: "faq",
         type: "internalPage",
         page: "faq",
       },
+      {
+        key: "contactSupport",
+        type: "internalPage",
+        page: "support",
+      },
+      {
+        key: "manageSubscription",
+        type: "internalPage",
+        page: "subscription",
+      },
+      {
+        key: "cancellationAndRefunds",
+        type: "internalPage",
+        page: "cancellation",
+      },
+      {
+        key: "accountData",
+        type: "internalPage",
+        page: "accountData",
+      },
     ],
   },
   {
-    key: "trust",
+    key: "trustLegal",
     links: [
-      {
-        key: "trust",
-        type: "internalPage",
-        page: "trust",
-      },
       {
         key: "security",
         type: "internalPage",
         page: "security",
       },
-      {
-        key: "data",
-        type: "internalPage",
-        page: "data",
-      },
-      {
-        key: "plaid",
-        type: "internalPage",
-        page: "plaid",
-      },
-    ],
-  },
-  {
-    key: "legal",
-    links: [
       {
         key: "privacyPolicy",
         type: "internalPage",
@@ -82,9 +82,14 @@ export const footerNavigationGroups = [
         page: "termsOfService",
       },
       {
-        key: "cookiePolicy",
+        key: "appTechnologies",
         type: "internalPage",
-        page: "cookiePolicy",
+        page: "appTechnologies",
+      },
+      {
+        key: "accessibility",
+        type: "internalPage",
+        page: "accessibility",
       },
     ],
   },

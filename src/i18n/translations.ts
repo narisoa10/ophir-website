@@ -34,35 +34,39 @@ export const translations = {
       brandLabel: "OPHIR home",
       description:
         "OPHIR helps individuals and families understand their finances, prepare for what comes next, and make more confident everyday decisions.",
-      contactLabel: "Contact",
-      emailLabel: "Email",
-      addressLabel: "Address",
       availability:
         "OPHIR is in development. Public account setup is not available on this site yet.",
       groups: {
-        product: "Product",
-        trust: "Trust",
-        legal: "Legal",
+        company: "Company",
+        support: "Support",
+        trustLegal: "Trust & Legal",
       },
       links: {
-        features: "Capabilities",
-        assistant: "Assistant",
-        dataAccess: "Data",
-        faq: "FAQ",
-        trust: "Trust",
+        about: "About",
+        contact: "Contact",
+        faq: "Frequently Asked Questions",
+        contactSupport: "Contact Support",
+        manageSubscription: "Manage Subscription",
+        cancellationAndRefunds: "Cancellation and Refunds",
+        accountData: "Account Deletion and Data Requests",
         security: "Security",
-        data: "Data",
-        plaid: "Plaid",
         privacyPolicy: "Privacy Policy",
         termsOfService: "Terms of Service",
-        cookiePolicy: "Cookie Policy",
+        appTechnologies: "Application Technologies and Cookies",
+        accessibility: "Accessibility",
       },
       copyrightPrefix: "©",
       copyrightSuffix: "All rights reserved.",
-      countryNote: "Made in Canada.",
+      countryNote: "Built in Québec, Canada.",
     },
 
     pages: {
+      about: {
+        title: "About",
+      },
+      contact: {
+        title: "Contact",
+      },
       trust: {
         title: "Trust",
       },
@@ -78,6 +82,18 @@ export const translations = {
       faq: {
         title: "FAQ",
       },
+      support: {
+        title: "Contact Support",
+      },
+      subscription: {
+        title: "Manage Subscription",
+      },
+      cancellation: {
+        title: "Cancellation and Refunds",
+      },
+      accountData: {
+        title: "Account Deletion and Data Requests",
+      },
       privacyPolicy: {
         ...privacyPolicyContent.en,
       },
@@ -86,6 +102,12 @@ export const translations = {
       },
       cookiePolicy: {
         title: "Cookie Policy",
+      },
+      appTechnologies: {
+        title: "Application Technologies and Cookies",
+      },
+      accessibility: {
+        title: "Accessibility",
       },
     },
 
@@ -774,36 +796,40 @@ export const translations = {
       ariaLabel: "Navigation du pied de page",
       brandLabel: "Accueil OPHIR",
       description:
-        "OPHIR aide les individus et les familles à comprendre leurs finances, à préparer la suite et à prendre des décisions quotidiennes plus confiantes.",
-      contactLabel: "Contact",
-      emailLabel: "Courriel",
-      addressLabel: "Adresse",
+        "OPHIR aide les particuliers et les familles à mieux comprendre leurs finances, à se préparer aux prochaines étapes et à prendre leurs décisions financières quotidiennes avec plus de confiance.",
       availability:
         "OPHIR est en développement. La création de compte public n'est pas encore disponible sur ce site.",
       groups: {
-        product: "Produit",
-        trust: "Confiance",
-        legal: "Juridique",
+        company: "Entreprise",
+        support: "Assistance",
+        trustLegal: "Confiance et informations juridiques",
       },
       links: {
-        features: "Fonctionnalités",
-        assistant: "Assistant",
-        dataAccess: "Données",
-        faq: "FAQ",
-        trust: "Confiance",
+        about: "À propos",
+        contact: "Contact",
+        faq: "Questions fréquentes",
+        contactSupport: "Contacter l'assistance",
+        manageSubscription: "Gérer l'abonnement",
+        cancellationAndRefunds: "Annulation et remboursements",
+        accountData: "Suppression du compte et demandes relatives aux données",
         security: "Sécurité",
-        data: "Données",
-        plaid: "Plaid",
-        privacyPolicy: "Privacy Policy",
+        privacyPolicy: "Politique de confidentialité",
         termsOfService: "Conditions d'utilisation",
-        cookiePolicy: "Cookie Policy",
+        appTechnologies: "Technologies de l’application et cookies",
+        accessibility: "Accessibilité",
       },
       copyrightPrefix: "©",
       copyrightSuffix: "Tous droits réservés.",
-      countryNote: "Conçu au Canada.",
+      countryNote: "Créé au Québec, Canada.",
     },
 
     pages: {
+      about: {
+        title: "À propos",
+      },
+      contact: {
+        title: "Contact",
+      },
       trust: {
         title: "Trust",
       },
@@ -819,6 +845,18 @@ export const translations = {
       faq: {
         title: "FAQ",
       },
+      support: {
+        title: "Contacter l'assistance",
+      },
+      subscription: {
+        title: "Gérer l'abonnement",
+      },
+      cancellation: {
+        title: "Annulation et remboursements",
+      },
+      accountData: {
+        title: "Suppression de compte et demandes de données",
+      },
       privacyPolicy: {
         ...privacyPolicyContent.fr,
       },
@@ -827,6 +865,12 @@ export const translations = {
       },
       cookiePolicy: {
         title: "Politique d'utilisation des cookies",
+      },
+      appTechnologies: {
+        title: "Technologies d'application et cookies",
+      },
+      accessibility: {
+        title: "Accessibilité",
       },
     },
 
@@ -1520,35 +1564,39 @@ export const translations = {
       brandLabel: "Главная OPHIR",
       description:
         "OPHIR помогает отдельным пользователям и семьям понимать свои финансы, готовиться к следующим шагам и увереннее принимать повседневные решения.",
-      contactLabel: "Контакты",
-      emailLabel: "Электронная почта",
-      addressLabel: "Адрес",
       availability:
         "OPHIR находится в разработке. Создание публичного аккаунта на этом сайте пока недоступно.",
       groups: {
-        product: "Продукт",
-        trust: "Доверие",
-        legal: "Правовая информация",
+        company: "Компания",
+        support: "Поддержка",
+        trustLegal: "Доверие и право",
       },
       links: {
-        features: "Возможности",
-        assistant: "Ассистент",
-        dataAccess: "Данные",
-        faq: "Вопросы",
-        trust: "Доверие",
+        about: "О компании",
+        contact: "Контакты",
+        faq: "Часто задаваемые вопросы",
+        contactSupport: "Связаться с поддержкой",
+        manageSubscription: "Управление подпиской",
+        cancellationAndRefunds: "Отмена подписки и возвраты",
+        accountData: "Удаление аккаунта и запросы о данных",
         security: "Безопасность",
-        data: "Данные",
-        plaid: "Plaid",
-        privacyPolicy: "Privacy Policy",
+        privacyPolicy: "Политика конфиденциальности",
         termsOfService: "Условия использования",
-        cookiePolicy: "Cookie Policy",
+        appTechnologies: "Технологии приложения и cookie",
+        accessibility: "Доступность",
       },
       copyrightPrefix: "©",
       copyrightSuffix: "Все права защищены.",
-      countryNote: "Сделано в Канаде.",
+      countryNote: "Создано в Квебеке, Канада.",
     },
 
     pages: {
+      about: {
+        title: "О компании",
+      },
+      contact: {
+        title: "Контакты",
+      },
       trust: {
         title: "Надёжность",
       },
@@ -1564,6 +1612,18 @@ export const translations = {
       faq: {
         title: "FAQ",
       },
+      support: {
+        title: "Связаться с поддержкой",
+      },
+      subscription: {
+        title: "Управление подпиской",
+      },
+      cancellation: {
+        title: "Отмена подписки и возвраты",
+      },
+      accountData: {
+        title: "Удаление аккаунта и запросы о данных",
+      },
       privacyPolicy: {
         ...privacyPolicyContent.ru,
       },
@@ -1572,6 +1632,12 @@ export const translations = {
       },
       cookiePolicy: {
         title: "Политика cookie",
+      },
+      appTechnologies: {
+        title: "Технологии приложения и cookie",
+      },
+      accessibility: {
+        title: "Доступность",
       },
     },
 

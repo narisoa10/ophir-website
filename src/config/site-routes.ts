@@ -3,14 +3,22 @@ import type { Locale } from "../i18n/config";
 import { siteSections, type SiteSectionKey } from "./site-sections";
 
 export const internalPagePaths = {
+  about: "/about",
+  contact: "/contact",
   trust: "/trust",
   security: "/security",
   data: "/data",
   plaid: "/plaid",
   faq: "/faq",
+  support: "/support",
+  subscription: "/subscription",
+  cancellation: "/cancellation",
+  accountData: "/account-data",
   privacyPolicy: "/privacy-policy",
   termsOfService: "/terms-of-service",
   cookiePolicy: "/cookie-policy",
+  appTechnologies: "/app-technologies",
+  accessibility: "/accessibility",
 } as const;
 
 export type InternalPageKey = keyof typeof internalPagePaths;
