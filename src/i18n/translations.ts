@@ -1,5 +1,6 @@
 import type { Locale } from "./config";
 import { privacyPolicyContent } from "./privacy-policy";
+import { termsOfServiceContent } from "./terms-of-service";
 
 export const translations = {
   en: {
@@ -81,7 +82,7 @@ export const translations = {
         ...privacyPolicyContent.en,
       },
       termsOfService: {
-        title: "Terms of Service",
+        ...termsOfServiceContent.en,
       },
       cookiePolicy: {
         title: "Cookie Policy",
@@ -794,7 +795,7 @@ export const translations = {
         data: "Données",
         plaid: "Plaid",
         privacyPolicy: "Privacy Policy",
-        termsOfService: "Terms of Service",
+        termsOfService: "Conditions d'utilisation",
         cookiePolicy: "Cookie Policy",
       },
       copyrightPrefix: "©",
@@ -1539,7 +1540,7 @@ export const translations = {
         data: "Данные",
         plaid: "Plaid",
         privacyPolicy: "Privacy Policy",
-        termsOfService: "Terms of Service",
+        termsOfService: "Условия использования",
         cookiePolicy: "Cookie Policy",
       },
       copyrightPrefix: "©",
@@ -1567,7 +1568,7 @@ export const translations = {
         ...privacyPolicyContent.ru,
       },
       termsOfService: {
-        title: "Условия использования",
+        ...termsOfServiceContent.ru,
       },
       cookiePolicy: {
         title: "Политика cookie",

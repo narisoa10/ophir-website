@@ -32,6 +32,11 @@ type DocumentBlock =
       items: readonly string[];
     }
   | {
+      type: "table";
+      headers: readonly string[];
+      rows: readonly (readonly string[])[];
+    }
+  | {
       type: "email";
       label: string;
       email: string;
@@ -51,6 +56,10 @@ const documentPage = page as DocumentPage;
 const pageTitle =
   documentPage.seoTitle ?? `${documentPage.title} | ${siteConfig.name}`;
 const pageDescription = documentPage.description ?? siteConfig.description;
+
+function getTextLines(text: string) {
+  return text.split("\n");
+}
 ---
 
 <BaseLayout
@@ -105,12 +114,28 @@ const pageDescription = documentPage.description ?? siteConfig.description;
                   <h2>{section.title}</h2>
 
                   {section.paragraphs?.map((paragraph) => (
-                    <p>{paragraph}</p>
+                    <p>
+                      {getTextLines(paragraph).map((line, index) => (
+                        <>
+                          {index > 0 && <br />}
+                          {line}
+                        </>
+                      ))}
+                    </p>
                   ))}
 
                   {section.blocks?.map((block) => {
                     if (block.type === "paragraph") {
-                      return <p>{block.text}</p>;
+                      return (
+                        <p>
+                          {getTextLines(block.text).map((line, index) => (
+                            <>
+                              {index > 0 && <br />}
+                              {line}
+                            </>
+                          ))}
+                        </p>
+                      );
                     }
 
                     if (block.type === "list") {
@@ -120,6 +145,32 @@ const pageDescription = documentPage.description ?? siteConfig.description;
                             <li>{item}</li>
                           ))}
                         </ul>
+                      );
+                    }
+
+                    if (block.type === "table") {
+                      return (
+                        <div class="internal-page__table-scroll">
+                          <table class="internal-page__table">
+                            <thead>
+                              <tr>
+                                {block.headers.map((header) => (
+                                  <th scope="col">{header}</th>
+                                ))}
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              {block.rows.map((row) => (
+                                <tr>
+                                  {row.map((cell) => (
+                                    <td>{cell}</td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
                       );
                     }
 
