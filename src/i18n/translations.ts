@@ -1,6 +1,7 @@
 import type { Locale } from "./config";
 import { aboutContent } from "./about";
 import { contactContent } from "./contact";
+import { faqContent } from "./faq";
 import { privacyPolicyContent } from "./privacy-policy";
 import { termsOfServiceContent } from "./terms-of-service";
 
@@ -82,7 +83,7 @@ export const translations = {
         title: "OPHIR and Plaid",
       },
       faq: {
-        title: "FAQ",
+        ...faqContent.en,
       },
       support: {
         title: "Contact Support",
@@ -845,7 +846,7 @@ export const translations = {
         title: "OPHIR et Plaid",
       },
       faq: {
-        title: "FAQ",
+        ...faqContent.fr,
       },
       support: {
         title: "Contacter l'assistance",
@@ -1612,7 +1613,7 @@ export const translations = {
         title: "OPHIR и Plaid",
       },
       faq: {
-        title: "FAQ",
+        ...faqContent.ru,
       },
       support: {
         title: "Связаться с поддержкой",

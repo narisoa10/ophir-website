@@ -63,7 +63,60 @@
   line-height: var(--line-height-body);
 }
 
+.internal-page__section-nav {
+  margin-top: var(--space-8);
+}
+
+.internal-page__section-nav ul {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.internal-page__section-nav a {
+  display: block;
+  min-width: 0;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-body-small);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.internal-page__section-nav a:hover {
+  border-color: var(--color-primary);
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 8%,
+    transparent
+  );
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.internal-page__section-nav a:focus-visible,
+.internal-page__faq-item summary:focus-visible {
+  outline: 3px solid color-mix(
+    in srgb,
+    var(--color-primary) 42%,
+    transparent
+  );
+  outline-offset: 3px;
+}
+
 .internal-page__section {
+  scroll-margin-top: var(--space-12);
   padding: var(--space-8) 0;
   border-top: 1px solid var(--color-border-soft);
 }
@@ -131,6 +184,21 @@
   text-underline-offset: 0.18em;
 }
 
+.internal-page__section a:hover {
+  color: var(--color-text);
+  text-decoration-thickness: 0.12em;
+}
+
+.internal-page__section a:focus-visible {
+  border-radius: 0.2rem;
+  outline: 3px solid color-mix(
+    in srgb,
+    var(--color-primary) 42%,
+    transparent
+  );
+  outline-offset: 3px;
+}
+
 .internal-page__list {
   margin: var(--space-4) 0 0;
   padding-left: var(--space-6);
@@ -178,8 +246,102 @@
   );
 }
 
+.internal-page__faq-list {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.internal-page__faq-item {
+  min-width: 0;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 68%,
+    transparent
+  );
+}
+
+.internal-page__faq-item[open] {
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 42%,
+    var(--color-border-soft)
+  );
+}
+
+.internal-page__faq-item summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+  cursor: pointer;
+}
+
+.internal-page__faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.internal-page__faq-item summary::after {
+  content: "+";
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.internal-page__faq-item[open] summary::after {
+  content: "-";
+}
+
+.internal-page__faq-number {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 12%,
+    transparent
+  );
+  color: var(--color-primary);
+  font-size: var(--font-size-body-small);
+  line-height: 1;
+}
+
+.internal-page__faq-question {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.internal-page__faq-answer {
+  padding: 0 var(--space-4) var(--space-4)
+    calc(var(--space-4) + 2rem + var(--space-3));
+}
+
+.internal-page__faq-answer p:first-child,
+.internal-page__faq-answer .internal-page__list:first-child {
+  margin-top: 0;
+}
+
 @media (min-width: 720px) {
+  .internal-page__section-nav ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .internal-page__contact-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .internal-page__section-nav ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }

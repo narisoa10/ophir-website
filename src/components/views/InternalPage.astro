@@ -21,8 +21,10 @@ const page = t.pages[pageKey];
 interface DocumentSection {
   key: string;
   title: string;
+  includeInNavigation?: boolean;
   paragraphs?: readonly string[];
   blocks?: readonly DocumentBlock[];
+  faqItems?: readonly FaqItem[];
 }
 
 type InlineContent =
@@ -43,6 +45,11 @@ type InlineContent =
       type: "emailLink";
       text: string;
       email: string;
+    }
+  | {
+      type: "externalLink";
+      text: string;
+      href: string;
     };
 
 type DocumentBlock =
@@ -81,6 +88,12 @@ type DocumentBlock =
       email: string;
     };
 
+interface FaqItem {
+  number: number;
+  question: string;
+  answer: readonly DocumentBlock[];
+}
+
 interface DocumentPage {
   title: string;
   seoTitle?: string;
@@ -89,6 +102,7 @@ interface DocumentPage {
   updatedLabel?: string;
   updated?: string;
   updatedDate?: string;
+  categoryNavigationLabel?: string;
   intro?: readonly DocumentBlock[];
   sections?: readonly DocumentSection[];
 }
@@ -181,6 +195,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                           return <a href={`mailto:${part.email}`}>{part.text}</a>;
                         }
 
+                        if (part.type === "externalLink") {
+                          return <a href={part.href}>{part.text}</a>;
+                        }
+
                         return getTextLines(part.text).map((line, index) => (
                           <>
                             {index > 0 && <br />}
@@ -195,6 +213,27 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                 return null;
               })}
             </div>
+          )
+        }
+
+        {
+          documentPage.sections && documentPage.categoryNavigationLabel && (
+            <nav
+              class="internal-page__section-nav"
+              aria-label={documentPage.categoryNavigationLabel}
+            >
+              <ul>
+                {documentPage.sections
+                  .filter((section) => section.includeInNavigation !== false)
+                  .map((section) => (
+                    <li>
+                      <a href={`#${pageKey}-${section.key}`}>
+                        {section.title}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
           )
         }
 
@@ -252,6 +291,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                                           return <a href={`mailto:${part.email}`}>{part.text}</a>;
                                         }
 
+                                        if (part.type === "externalLink") {
+                                          return <a href={part.href}>{part.text}</a>;
+                                        }
+
                                         return getTextLines(part.text).map((line, index) => (
                                           <>
                                             {index > 0 && <br />}
@@ -283,6 +326,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
 
                                             if (part.type === "emailLink") {
                                               return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                                            }
+
+                                            if (part.type === "externalLink") {
+                                              return <a href={part.href}>{part.text}</a>;
                                             }
 
                                             return getTextLines(part.text).map((line, index) => (
@@ -326,6 +373,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                               return <a href={`mailto:${part.email}`}>{part.text}</a>;
                             }
 
+                            if (part.type === "externalLink") {
+                              return <a href={part.href}>{part.text}</a>;
+                            }
+
                             return getTextLines(part.text).map((line, index) => (
                               <>
                                 {index > 0 && <br />}
@@ -357,6 +408,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
 
                                 if (part.type === "emailLink") {
                                   return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                                }
+
+                                if (part.type === "externalLink") {
+                                  return <a href={part.href}>{part.text}</a>;
                                 }
 
                                 return getTextLines(part.text).map((line, index) => (
@@ -418,6 +473,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                               return <a href={`mailto:${part.email}`}>{part.text}</a>;
                             }
 
+                            if (part.type === "externalLink") {
+                              return <a href={part.href}>{part.text}</a>;
+                            }
+
                             return getTextLines(part.text).map((line, index) => (
                               <>
                                 {index > 0 && <br />}
@@ -436,6 +495,103 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                       </p>
                     );
                   })}
+
+                  {section.faqItems && (
+                    <div class="internal-page__faq-list">
+                      {section.faqItems.map((faqItem) => (
+                        <details class="internal-page__faq-item">
+                          <summary>
+                            <span class="internal-page__faq-number">
+                              {faqItem.number}
+                            </span>
+                            <span class="internal-page__faq-question">
+                              {faqItem.question}
+                            </span>
+                          </summary>
+
+                          <div class="internal-page__faq-answer">
+                            {faqItem.answer.map((answerBlock) => {
+                              if (answerBlock.type === "paragraph") {
+                                return (
+                                  <p>
+                                    {getInlineParts(answerBlock.content ?? answerBlock.text).map((part) => {
+                                      if (part.type === "strong") {
+                                        return <strong>{part.text}</strong>;
+                                      }
+
+                                      if (part.type === "internalLink") {
+                                        return (
+                                          <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                            {part.text}
+                                          </a>
+                                        );
+                                      }
+
+                                      if (part.type === "emailLink") {
+                                        return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                                      }
+
+                                      if (part.type === "externalLink") {
+                                        return <a href={part.href}>{part.text}</a>;
+                                      }
+
+                                      return getTextLines(part.text).map((line, index) => (
+                                        <>
+                                          {index > 0 && <br />}
+                                          {line}
+                                        </>
+                                      ));
+                                    })}
+                                  </p>
+                                );
+                              }
+
+                              if (answerBlock.type === "list") {
+                                return (
+                                  <ul class="internal-page__list">
+                                    {answerBlock.items.map((item) => (
+                                      <li>
+                                        {getInlineParts(item).map((part) => {
+                                          if (part.type === "strong") {
+                                            return <strong>{part.text}</strong>;
+                                          }
+
+                                          if (part.type === "internalLink") {
+                                            return (
+                                              <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                                {part.text}
+                                              </a>
+                                            );
+                                          }
+
+                                          if (part.type === "emailLink") {
+                                            return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                                          }
+
+                                          if (part.type === "externalLink") {
+                                            return <a href={part.href}>{part.text}</a>;
+                                          }
+
+                                          return getTextLines(part.text).map((line, index) => (
+                                            <>
+                                              {index > 0 && <br />}
+                                              {line}
+                                            </>
+                                          ));
+                                        })}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                );
+                              }
+
+                              return null;
+                            })}
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                  )}
                 </section>
               ))}
             </article>
