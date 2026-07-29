@@ -74,13 +74,25 @@ type DocumentBlock =
       content?: readonly InlineContent[];
     }
   | {
+      type: "callout";
+      content: readonly InlineContent[];
+    }
+  | {
+      type: "metadata";
+      items: readonly {
+        label: string;
+        value: string;
+        dateTime?: string;
+      }[];
+    }
+  | {
       type: "list";
       items: readonly (string | readonly InlineContent[])[];
     }
   | {
       type: "table";
       headers: readonly string[];
-      rows: readonly (readonly string[])[];
+      rows: readonly (readonly (string | readonly InlineContent[])[])[];
     }
   | {
       type: "address";
@@ -215,6 +227,66 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                         ));
                       })}
                     </p>
+                  );
+                }
+
+                if (block.type === "metadata") {
+                  return (
+                    <dl class="internal-page__metadata">
+                      {block.items.map((item) => (
+                        <div>
+                          <dt>{item.label}</dt>
+                          <dd>
+                            {item.dateTime ? (
+                              <time datetime={item.dateTime}>{item.value}</time>
+                            ) : (
+                              item.value
+                            )}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  );
+                }
+
+                if (block.type === "callout") {
+                  return (
+                    <aside class="internal-page__callout">
+                      <p>
+                        {getInlineParts(block.content).map((part) => {
+                          if (part.type === "strong") {
+                            return <strong>{part.text}</strong>;
+                          }
+
+                          if (part.type === "inlineCode") {
+                            return <code>{part.text}</code>;
+                          }
+
+                          if (part.type === "internalLink") {
+                            return (
+                              <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                {part.text}
+                              </a>
+                            );
+                          }
+
+                          if (part.type === "emailLink") {
+                            return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                          }
+
+                          if (part.type === "externalLink") {
+                            return <a href={part.href}>{part.text}</a>;
+                          }
+
+                          return getTextLines(part.text).map((line, index) => (
+                            <>
+                              {index > 0 && <br />}
+                              {line}
+                            </>
+                          ));
+                        })}
+                      </p>
+                    </aside>
                   );
                 }
 
@@ -369,6 +441,68 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                       );
                     }
 
+                    if (block.type === "metadata") {
+                      return (
+                        <dl class="internal-page__metadata">
+                          {block.items.map((item) => (
+                            <div>
+                              <dt>{item.label}</dt>
+                              <dd>
+                                {item.dateTime ? (
+                                  <time datetime={item.dateTime}>
+                                    {item.value}
+                                  </time>
+                                ) : (
+                                  item.value
+                                )}
+                              </dd>
+                            </div>
+                          ))}
+                        </dl>
+                      );
+                    }
+
+                    if (block.type === "callout") {
+                      return (
+                        <aside class="internal-page__callout">
+                          <p>
+                            {getInlineParts(block.content).map((part) => {
+                              if (part.type === "strong") {
+                                return <strong>{part.text}</strong>;
+                              }
+
+                              if (part.type === "inlineCode") {
+                                return <code>{part.text}</code>;
+                              }
+
+                              if (part.type === "internalLink") {
+                                return (
+                                  <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                    {part.text}
+                                  </a>
+                                );
+                              }
+
+                              if (part.type === "emailLink") {
+                                return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                              }
+
+                              if (part.type === "externalLink") {
+                                return <a href={part.href}>{part.text}</a>;
+                              }
+
+                              return getTextLines(part.text).map((line, index) => (
+                                <>
+                                  {index > 0 && <br />}
+                                  {line}
+                                </>
+                              ));
+                            })}
+                          </p>
+                        </aside>
+                      );
+                    }
+
                     if (block.type === "paragraph") {
                       return (
                         <p>
@@ -467,7 +601,40 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                               {block.rows.map((row) => (
                                 <tr>
                                   {row.map((cell) => (
-                                    <td>{cell}</td>
+                                    <td>
+                                      {getInlineParts(cell).map((part) => {
+                                        if (part.type === "strong") {
+                                          return <strong>{part.text}</strong>;
+                                        }
+
+                                        if (part.type === "inlineCode") {
+                                          return <code>{part.text}</code>;
+                                        }
+
+                                        if (part.type === "internalLink") {
+                                          return (
+                                            <a href={getLocalizedInternalPageHref(locale, part.page)}>
+                                              {part.text}
+                                            </a>
+                                          );
+                                        }
+
+                                        if (part.type === "emailLink") {
+                                          return <a href={`mailto:${part.email}`}>{part.text}</a>;
+                                        }
+
+                                        if (part.type === "externalLink") {
+                                          return <a href={part.href}>{part.text}</a>;
+                                        }
+
+                                        return getTextLines(part.text).map((line, index) => (
+                                          <>
+                                            {index > 0 && <br />}
+                                            {line}
+                                          </>
+                                        ));
+                                      })}
+                                    </td>
                                   ))}
                                 </tr>
                               ))}

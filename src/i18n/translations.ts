@@ -3,6 +3,7 @@ import { aboutContent } from "./about";
 import { contactContent } from "./contact";
 import { faqContent } from "./faq";
 import { privacyPolicyContent } from "./privacy-policy";
+import { subscriptionContent } from "./subscription";
 import { supportContent } from "./support";
 import { termsOfServiceContent } from "./terms-of-service";
 
@@ -90,7 +91,7 @@ export const translations = {
         ...supportContent.en,
       },
       subscription: {
-        title: "Manage Subscription",
+        ...subscriptionContent.en,
       },
       cancellation: {
         title: "Cancellation and Refunds",
@@ -853,7 +854,7 @@ export const translations = {
         ...supportContent.fr,
       },
       subscription: {
-        title: "Gérer l'abonnement",
+        ...subscriptionContent.fr,
       },
       cancellation: {
         title: "Annulation et remboursements",
@@ -1620,7 +1621,7 @@ export const translations = {
         ...supportContent.ru,
       },
       subscription: {
-        title: "Управление подпиской",
+        ...subscriptionContent.ru,
       },
       cancellation: {
         title: "Отмена подписки и возвраты",
