@@ -37,6 +37,10 @@ type InlineContent =
       text: string;
     }
   | {
+      type: "inlineCode";
+      text: string;
+    }
+  | {
       type: "internalLink";
       text: string;
       page: InternalPageKey;
@@ -183,6 +187,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                           return <strong>{part.text}</strong>;
                         }
 
+                        if (part.type === "inlineCode") {
+                          return <code>{part.text}</code>;
+                        }
+
                         if (part.type === "internalLink") {
                           return (
                             <a href={getLocalizedInternalPageHref(locale, part.page)}>
@@ -279,6 +287,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                                           return <strong>{part.text}</strong>;
                                         }
 
+                                        if (part.type === "inlineCode") {
+                                          return <code>{part.text}</code>;
+                                        }
+
                                         if (part.type === "internalLink") {
                                           return (
                                             <a href={getLocalizedInternalPageHref(locale, part.page)}>
@@ -314,6 +326,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                                           {getInlineParts(item).map((part) => {
                                             if (part.type === "strong") {
                                               return <strong>{part.text}</strong>;
+                                            }
+
+                                            if (part.type === "inlineCode") {
+                                              return <code>{part.text}</code>;
                                             }
 
                                             if (part.type === "internalLink") {
@@ -361,6 +377,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                               return <strong>{part.text}</strong>;
                             }
 
+                            if (part.type === "inlineCode") {
+                              return <code>{part.text}</code>;
+                            }
+
                             if (part.type === "internalLink") {
                               return (
                                 <a href={getLocalizedInternalPageHref(locale, part.page)}>
@@ -396,6 +416,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                               {getInlineParts(item).map((part) => {
                                 if (part.type === "strong") {
                                   return <strong>{part.text}</strong>;
+                                }
+
+                                if (part.type === "inlineCode") {
+                                  return <code>{part.text}</code>;
                                 }
 
                                 if (part.type === "internalLink") {
@@ -461,6 +485,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                               return <strong>{part.text}</strong>;
                             }
 
+                            if (part.type === "inlineCode") {
+                              return <code>{part.text}</code>;
+                            }
+
                             if (part.type === "internalLink") {
                               return (
                                 <a href={getLocalizedInternalPageHref(locale, part.page)}>
@@ -519,6 +547,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                                         return <strong>{part.text}</strong>;
                                       }
 
+                                      if (part.type === "inlineCode") {
+                                        return <code>{part.text}</code>;
+                                      }
+
                                       if (part.type === "internalLink") {
                                         return (
                                           <a href={getLocalizedInternalPageHref(locale, part.page)}>
@@ -554,6 +586,10 @@ function getInlineParts(content: string | readonly InlineContent[] | undefined) 
                                         {getInlineParts(item).map((part) => {
                                           if (part.type === "strong") {
                                             return <strong>{part.text}</strong>;
+                                          }
+
+                                          if (part.type === "inlineCode") {
+                                            return <code>{part.text}</code>;
                                           }
 
                                           if (part.type === "internalLink") {

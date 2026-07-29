@@ -3,6 +3,7 @@ import { aboutContent } from "./about";
 import { contactContent } from "./contact";
 import { faqContent } from "./faq";
 import { privacyPolicyContent } from "./privacy-policy";
+import { supportContent } from "./support";
 import { termsOfServiceContent } from "./terms-of-service";
 
 export const translations = {
@@ -86,7 +87,7 @@ export const translations = {
         ...faqContent.en,
       },
       support: {
-        title: "Contact Support",
+        ...supportContent.en,
       },
       subscription: {
         title: "Manage Subscription",
@@ -849,7 +850,7 @@ export const translations = {
         ...faqContent.fr,
       },
       support: {
-        title: "Contacter l'assistance",
+        ...supportContent.fr,
       },
       subscription: {
         title: "Gérer l'abonnement",
@@ -1616,7 +1617,7 @@ export const translations = {
         ...faqContent.ru,
       },
       support: {
-        title: "Связаться с поддержкой",
+        ...supportContent.ru,
       },
       subscription: {
         title: "Управление подпиской",
