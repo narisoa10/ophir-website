@@ -1,16 +1,41 @@
-type TermsOfServiceBlock =
+type TermsOfServiceInlineContent =
   | {
-      type: "paragraph";
+      type: "text";
       text: string;
     }
   | {
+      type: "strong";
+      text: string;
+    }
+  | {
+      type: "inlineCode";
+      text: string;
+    }
+  | {
+      type: "internalLink";
+      text: string;
+      page: "privacyPolicy" | "subscription" | "cancellation" | "accountData" | "termsOfService";
+    }
+  | {
+      type: "emailLink";
+      text: string;
+      email: string;
+    };
+
+type TermsOfServiceBlock =
+  | {
+      type: "paragraph";
+      text?: string;
+      content?: readonly TermsOfServiceInlineContent[];
+    }
+  | {
       type: "list";
-      items: readonly string[];
+      items: readonly (string | readonly TermsOfServiceInlineContent[])[];
     }
   | {
       type: "table";
       headers: readonly string[];
-      rows: readonly (readonly string[])[];
+      rows: readonly (readonly (string | readonly TermsOfServiceInlineContent[])[])[];
     };
 
 type TermsOfServiceSection = {
@@ -615,6 +640,1516 @@ export const termsOfServiceContent = {
       }
     ]
   },
+  fr: {
+      "title": "Conditions d'utilisation",
+      "seoTitle": "Conditions d'utilisation | OPHIR",
+      "description": "Conditions régissant l'accès à OPHIR et l'utilisation du Service, y compris les comptes, les données financières connectées, les abonnements et les responsabilités des utilisateurs.",
+      "updatedLabel": "Date d'entrée en vigueur :",
+      "updated": "28 juillet 2026",
+      "updatedDate": "2026-07-28",
+      "sections": [
+          {
+              "key": "exploitant-du-service",
+              "title": "Exploitant du Service",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Version canadienne française"
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Soavinjato Andrianarisoa\n1203 Rue Normont\nLaval (Québec) H7G 3H3\nCanada\n"
+                          },
+                          {
+                              "type": "emailLink",
+                              "text": "contact@joinophir.app",
+                              "email": "contact@joinophir.app"
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "table-des-matieres",
+              "title": "Table des matières",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Aperçu en langage clair\n1. Accord et portée\n2. Admissibilité et disponibilité\n3. Inscription et sécurité du compte\n4. Le Service OPHIR\n5. Comptes financiers connectés et fournisseurs de données tiers\n6. Renseignements financiers, calculs et analyses automatisées\n7. Absence de conseils professionnels et de relation fiduciaire\n8. Abonnements, facturation, renouvellement et "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "annulation",
+                              "page": "cancellation"
+                          },
+                          {
+                              "type": "text",
+                              "text": "\n9. Renseignements destinés aux consommateurs et conclusion de contrats électroniques\n10. Utilisation acceptable\n11. Votre Contenu et vos instructions\n12. Protection de la vie privée et des renseignements personnels\n13. Propriété intellectuelle et licence\n14. Plateformes et services tiers\n15. Modifications, disponibilité et entretien\n16. Suspension, résiliation et "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "suppression du compte",
+                              "page": "accountData"
+                          },
+                          {
+                              "type": "text",
+                              "text": "\n17. Exclusions de garanties\n18. Limitation de responsabilité\n19. Droit applicable et différends\n20. Modifications des présentes Conditions\n21. Dispositions générales\n22. Coordonnées\nAnnexe A - Liste de contrôle des renseignements relatifs à l'abonnement"
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "apercu-en-langage-clair",
+              "title": "Aperçu en langage clair",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les présentes "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Conditions d'utilisation",
+                              "page": "termsOfService"
+                          },
+                          {
+                              "type": "text",
+                              "text": " régissent votre utilisation de l'application mobile OPHIR, du site Web, des connexions de données financières, des outils de budgétisation, des fonctions d'analyse, des observations automatisées et des services connexes. L'aperçu ci-dessous est fourni uniquement à titre pratique. En cas de divergence avec les dispositions détaillées qui suivent, ces dernières prévalent, sous réserve des droits auxquels la loi ne permet pas de renoncer."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "table",
+                      "headers": [
+                          "Sujet",
+                          "Ce que cela signifie"
+                      ],
+                      "rows": [
+                          [
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Admissibilité"
+                                  }
+                              ],
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "OPHIR s'adresse aux personnes qui résident au Canada, sont âgées d'au moins 18 ans et ont la capacité juridique de conclure un contrat."
+                                  }
+                              ]
+                          ],
+                          [
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Abonnement"
+                                  }
+                              ],
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Les abonnements payants sont achetés et gérés dans l'App Store d'Apple ou Google Play. La facturation, l'"
+                                  },
+                                  {
+                                      "type": "internalLink",
+                                      "text": "annulation",
+                                      "page": "cancellation"
+                                  },
+                                  {
+                                      "type": "text",
+                                      "text": " et l'administration des remboursements sont généralement régies par les règles du magasin utilisé, ainsi que par les lois applicables en matière de protection du consommateur."
+                                  }
+                              ]
+                          ],
+                          [
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Données financières"
+                                  }
+                              ],
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Vous pouvez connecter des comptes financiers admissibles par l'intermédiaire de fournisseurs tiers comme Plaid. OPHIR n'est pas une banque, ne détient pas votre argent et ne le transfère pas."
+                                  }
+                              ]
+                          ],
+                          [
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Analyse"
+                                  }
+                              ],
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "OPHIR offre des outils de budgétisation, de prévision et de catégorisation ainsi que des observations financières automatisées. Ces outils sont informatifs et ne constituent pas des conseils professionnels en matière financière, de placement, de fiscalité, de comptabilité, de droit, de crédit ou d'assurance."
+                                  }
+                              ]
+                          ],
+                          [
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Vos responsabilités"
+                                  }
+                              ],
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Vous devez protéger votre compte, fournir des renseignements exacts, vérifier les résultats automatisés et utiliser le Service légalement."
+                                  }
+                              ]
+                          ],
+                          [
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Droits impératifs"
+                                  }
+                              ],
+                              [
+                                  {
+                                      "type": "text",
+                                      "text": "Aucune disposition des présentes Conditions ne supprime un droit ou un recours auquel la loi applicable ne permet pas de renoncer, notamment les droits prévus par les lois québécoises sur la protection du consommateur lorsqu'elles s'appliquent."
+                                  }
+                              ]
+                          ]
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Veuillez lire attentivement le document au complet avant de créer un compte, de commencer un abonnement ou de connecter un compte financier."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-1-accord-et-portee",
+              "title": "1. Accord et portée",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les présentes "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Conditions d'utilisation",
+                              "page": "termsOfService"
+                          },
+                          {
+                              "type": "text",
+                              "text": " (les "
+                          },
+                          {
+                              "type": "strong",
+                              "text": "Conditions"
+                          },
+                          {
+                              "type": "text",
+                              "text": ") constituent un accord juridiquement contraignant entre vous et Soavinjato Andrianarisoa, exerçant ses activités sous le nom OPHIR ("
+                          },
+                          {
+                              "type": "strong",
+                              "text": "OPHIR"
+                          },
+                          {
+                              "type": "text",
+                              "text": ", "
+                          },
+                          {
+                              "type": "strong",
+                              "text": "nous"
+                          },
+                          {
+                              "type": "text",
+                              "text": ", "
+                          },
+                          {
+                              "type": "strong",
+                              "text": "notre"
+                          },
+                          {
+                              "type": "text",
+                              "text": " ou "
+                          },
+                          {
+                              "type": "strong",
+                              "text": "nos"
+                          },
+                          {
+                              "type": "text",
+                              "text": "). Elles régissent l'accès à l'application mobile et aux sites Web OPHIR, aux fonctions d'agrégation de comptes, aux outils de budgétisation, aux tableaux de bord, aux rapports, aux alertes, aux prévisions, aux observations automatisées, aux fonctions d'assistant financier personnel, au service à la clientèle ainsi qu'à tout contenu ou service connexe qui renvoie aux présentes Conditions (collectivement, le "
+                          },
+                          {
+                              "type": "strong",
+                              "text": "Service"
+                          },
+                          {
+                              "type": "text",
+                              "text": "), et leur utilisation."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "En téléchargeant l'application, en créant un compte, en achetant un abonnement, en connectant un compte financier, en sélectionnant « J'accepte » ou en utilisant autrement le Service, vous confirmez avoir lu, compris et accepté les présentes Conditions et notre "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Politique de confidentialité",
+                              "page": "privacyPolicy"
+                          },
+                          {
+                              "type": "text",
+                              "text": ". Si vous n'acceptez pas ces documents, n'accédez pas au Service et ne l'utilisez pas."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les présentes Conditions régissent uniquement la relation entre vous et OPHIR. Des conditions distinctes peuvent s'appliquer aux services tiers, notamment ceux d'Apple, de Google, de Plaid et de votre institution financière. Ces tiers ne deviennent pas parties aux présentes Conditions du seul fait que leur technologie ou leur place de marché est utilisée dans le cadre du Service."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Lorsque les lois applicables en matière de protection du consommateur, de vie privée, de langue ou dans un autre domaine vous confèrent des droits qui ne peuvent être exclus, restreints ou abandonnés, ces droits demeurent pleinement applicables. Toutes les dispositions des présentes Conditions doivent être interprétées en conséquence."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-2-admissibilite-et-disponibilite",
+              "title": "2. Admissibilité et disponibilité",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Le Service est offert pour un usage personnel et familial aux résidents du Canada âgés d'au moins 18 ans, ayant la capacité juridique de conclure un contrat et utilisant le Service conformément aux présentes Conditions. Vous ne devez pas créer de compte pour une personne qui ne répond pas à ces exigences."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "À un moment donné, OPHIR peut ne prendre en charge que certaines provinces, certains territoires, institutions financières, types de comptes, devises, appareils, systèmes d'exploitation ou langues. La disponibilité peut changer au fur et à mesure de l'évolution du Service. L'accès à partir d'un endroit où le Service n'est pas offert ne crée aucune obligation pour OPHIR d'y fournir des fonctions locales, un soutien réglementaire ou un service à la clientèle."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous pouvez utiliser OPHIR pour vos propres finances et, lorsqu'une fonction le permet expressément, pour un budget familial ou de ménage, avec la connaissance et l'autorisation des autres personnes dont les renseignements sont inclus. OPHIR n'est actuellement pas destiné à la comptabilité d'entreprise, à l'administration fiduciaire, à la gestion professionnelle de fonds ni à la gestion de fonds appartenant à des tiers sans lien avec vous."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-3-inscription-et-securite-du-compte",
+              "title": "3. Inscription et sécurité du compte",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous pourriez devoir créer un compte OPHIR et fournir des renseignements comme votre nom, votre adresse courriel, votre région, votre langue préférée et vos données d'authentification. Vous acceptez de fournir des renseignements exacts, à jour et complets, et de les mettre à jour lorsque cela est nécessaire."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous êtes responsable de la confidentialité et de la sécurité de vos identifiants, appareils, codes d'accès, méthodes de récupération et facteurs d'authentification associés à votre compte. Vous ne devez pas partager vos identifiants ni permettre à une autre personne d'utiliser votre compte, sauf lorsqu'une fonction familiale particulière d'OPHIR autorise un accès partagé."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous devez communiquer rapidement avec "
+                          },
+                          {
+                              "type": "emailLink",
+                              "text": "support@joinophir.app",
+                              "email": "support@joinophir.app"
+                          },
+                          {
+                              "type": "text",
+                              "text": " si vous croyez que votre compte, votre appareil, un compte financier connecté ou une méthode d'authentification a été compromis. OPHIR peut exiger une vérification raisonnable avant de rétablir l'accès, de modifier des renseignements sensibles du compte ou de répondre à une demande de suppression."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous êtes responsable des activités effectuées au moyen de votre compte dans la mesure permise par la loi. Nous pouvons suspendre l'accès lorsque nous croyons raisonnablement que cela est nécessaire pour vous protéger, protéger OPHIR, un autre utilisateur, une institution financière ou l'intégrité du Service."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-4-le-service-ophir",
+              "title": "4. Le Service OPHIR",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "OPHIR est un service d'organisation et d'analyse des finances personnelles. Selon votre abonnement, votre appareil, votre emplacement et les institutions connectées, le Service peut vous permettre d'afficher des renseignements de comptes financiers, de catégoriser des opérations, de créer des budgets, d'organiser des obligations récurrentes, de surveiller les flux de trésorerie, de définir des objectifs, de consulter des prévisions, de comparer les résultats réels aux plans et de recevoir des observations automatisées ou des mesures suggérées."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Le Service est conçu pour vous aider à comprendre des renseignements et à prendre vos propres décisions. OPHIR n'ouvre pas de comptes de dépôt, ne détient pas les fonds des utilisateurs, n'émet pas de cartes de paiement, ne prête pas d'argent, n'exécute pas d'opérations sur titres, ne transfère pas d'argent, ne recouvre pas de dettes, n'assure pas de biens et n'agit pas comme banque, caisse populaire, courtier en valeurs mobilières, gestionnaire de portefeuille, planificateur financier, comptable, préparateur de déclarations de revenus, avocat ou intermédiaire d'assurance."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Certaines fonctions peuvent être désignées comme bêta, préliminaires, expérimentales ou offertes en accès anticipé. Elles peuvent être incomplètes, changer sans préavis ou produire des résultats moins fiables. Vous ne devriez pas vous fier à une fonction expérimentale pour une décision susceptible d'entraîner d'importantes conséquences financières ou juridiques."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-5-comptes-financiers-connectes-et-fournisseurs-de-donnees-tiers",
+              "title": "5. Comptes financiers connectés et fournisseurs de données tiers",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "OPHIR peut vous permettre de connecter des comptes admissibles détenus auprès de banques, de caisses populaires, d'émetteurs de cartes, de plateformes de placement ou d'autres institutions financières. Les connexions peuvent être facilitées par des fournisseurs de données tiers comme Plaid. En lançant une connexion, vous autorisez OPHIR et le fournisseur concerné à demander, recevoir, traiter et actualiser les renseignements du compte de la manière décrite dans le Service et la "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Politique de confidentialité",
+                              "page": "privacyPolicy"
+                          },
+                          {
+                              "type": "text",
+                              "text": "."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous déclarez être autorisé à accéder à chaque compte que vous connectez et à donner les instructions et consentements nécessaires. Vous ne devez pas connecter le compte d'une autre personne sans pouvoir légal et, lorsque cela est requis, sans que cette personne en soit informée."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les institutions financières et les fournisseurs de données contrôlent la disponibilité, la portée, la fréquence et l'exactitude des données fournies par leurs systèmes. Les connexions peuvent être retardées, interrompues, dupliquées, incomplètes, mal catégorisées ou supprimées. Certaines institutions peuvent exiger une nouvelle authentification ou l'acceptation de conditions modifiées. OPHIR ne contrôle pas ces systèmes et ne garantit pas une connectivité continue."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Sauf indication contraire expresse d'OPHIR, OPHIR ne reçoit ni ne conserve votre mot de passe de services bancaires en ligne. L'authentification peut avoir lieu auprès de l'institution financière ou du fournisseur tiers. Vous demeurez assujetti aux conventions et aux exigences de sécurité de votre institution."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous pouvez déconnecter un compte dans les paramètres disponibles. La déconnexion peut mettre fin aux récupérations futures, mais ne supprime pas nécessairement les renseignements déjà importés ni les données qui en découlent. La suppression et la conservation sont traitées dans notre "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Politique de confidentialité",
+                              "page": "privacyPolicy"
+                          },
+                          {
+                              "type": "text",
+                              "text": " et à l'article 16 des présentes Conditions."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-6-renseignements-financiers-calculs-et-analyses-automatisees",
+              "title": "6. Renseignements financiers, calculs et analyses automatisées",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "OPHIR peut traiter les données importées et les renseignements que vous saisissez manuellement afin de produire des soldes, des résumés, des catégories, des vues des flux de trésorerie, des calculs budgétaires, des prévisions, des indicateurs de confiance, des alertes, des explications et des mesures suggérées. Ces résultats peuvent reposer sur des hypothèses, des méthodes statistiques, une logique fondée sur des règles, des modèles de catégorisation ou d'autres procédés automatisés."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les systèmes automatisés peuvent commettre des erreurs. Les données importées peuvent être désuètes ou incomplètes; les commerçants peuvent être mal identifiés; les transferts peuvent être considérés comme des revenus ou des dépenses; certaines opérations récurrentes peuvent ne pas être repérées; et les prévisions peuvent ne pas tenir compte d'événements imprévus. Vous devez vérifier les données sous-jacentes et déterminer si un résultat convient à votre situation."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Tout indice de santé financière, indicateur de stabilité ou de confiance, niveau de risque, solde projeté, montant estimatif d'épargne ou mesure semblable constitue un outil d'analyse propre à OPHIR. Il ne s'agit pas d'une cote de crédit, d'une évaluation réglementée de convenance, d'une garantie, d'une certification ni d'une décision d'une institution financière ou d'une autorité publique."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "OPHIR peut améliorer ses modèles, ses catégories et ses méthodes au fil du temps. Les mêmes données peuvent donc produire des résultats différents après une mise à jour. Les comparaisons historiques peuvent également changer lorsque des opérations sont corrigées, recatégorisées, supprimées ou nouvellement reçues."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-7-absence-de-conseils-professionnels-et-de-relation-fiduciaire",
+              "title": "7. Absence de conseils professionnels et de relation fiduciaire",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Tout le contenu et tous les résultats du Service sont fournis à des fins générales d'information et d'éducation. Ils ne constituent pas des conseils professionnels en matière de planification financière, de placement, de valeurs mobilières, de services bancaires, de crédit, d'hypothèque, de fiscalité, de comptabilité, de droit, d'assurance, d'insolvabilité ou dans tout autre domaine."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "OPHIR ne connaît pas toutes les circonstances susceptibles d'influencer vos décisions. Avant d'agir sur la foi d'un renseignement fourni par le Service, vous devriez le vérifier de manière indépendante et, lorsque cela est approprié, consulter un professionnel qualifié en mesure d'évaluer l'ensemble de votre situation."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Aucune disposition du Service ne crée entre vous et OPHIR une relation fiduciaire, de conseil, de confiance, de mandataire, de partenariat, d'emploi ou de professionnel à client. Vous demeurez seul responsable de vos décisions financières, opérations, déclarations fiscales, obligations juridiques et communications avec les institutions financières ou les créanciers."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous ne devez pas utiliser OPHIR comme unique fondement d'une décision urgente, d'une réponse à une mesure de recouvrement, d'une démarche liée à l'insolvabilité, d'une déclaration fiscale, d'une opération de placement ou d'une autre action pour laquelle une erreur ou un retard pourrait entraîner un préjudice important."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-8-abonnements-facturation-renouvellement-et-annulation",
+              "title": "8. Abonnements, facturation, renouvellement et annulation",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "L'accès à la totalité ou à une partie du Service peut exiger un abonnement payant acheté dans l'App Store d'Apple ou Google Play. Le prix, la période de facturation, les modalités d'une période d'essai, les fonctions incluses et les taxes applicables sont affichés par le magasin concerné avant l'achat. Les prix peuvent varier selon la plateforme, la région, la devise, la promotion ou le forfait."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Sauf indication contraire à l'écran d'achat, les abonnements se renouvellent automatiquement pour des périodes de facturation successives jusqu'à leur "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "annulation",
+                              "page": "cancellation"
+                          },
+                          {
+                              "type": "text",
+                              "text": ". Le magasin concerné débite le mode de paiement associé à votre identifiant Apple ou à votre compte Google conformément à ses propres conditions de paiement. OPHIR ne reçoit pas directement le numéro complet de votre carte de paiement pour les achats effectués dans le magasin."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous pouvez annuler votre abonnement dans les paramètres de "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "gestion des abonnements",
+                              "page": "subscription"
+                          },
+                          {
+                              "type": "text",
+                              "text": " du magasin où il a été acheté. La suppression de l'application OPHIR, la déconnexion d'un compte financier ou la fermeture de votre compte OPHIR n'annule pas en soi l'abonnement du magasin. Afin d'éviter le prochain débit, annulez séparément l'abonnement avant la date de renouvellement."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "L'"
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "annulation",
+                              "page": "cancellation"
+                          },
+                          {
+                              "type": "text",
+                              "text": " prend généralement effet à la fin de la période payée en cours et, sous réserve des règles du magasin, l'accès peut demeurer disponible jusqu'à cette date. Les demandes de remboursement sont généralement administrées par Apple ou Google. Aucune disposition du présent article ne limite un droit au remboursement, à l'"
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "annulation",
+                              "page": "cancellation"
+                          },
+                          {
+                              "type": "text",
+                              "text": ", à la contestation d'un débit ou à un autre recours prévu par la loi applicable."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Nous pouvons modifier les prix des abonnements ou les fonctions des forfaits. Une modification de prix ne prend effet que conformément à la loi applicable et aux procédures du magasin concerné, lesquelles peuvent exiger un préavis ou votre consentement. Si vous refusez la modification, vous pouvez annuler l'abonnement avant son entrée en vigueur."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Des conditions supplémentaires communiquées peuvent s'appliquer aux essais et aux rabais. Une période d'essai peut devenir un abonnement payant si elle n'est pas annulée avant la date indiquée. L'admissibilité à une promotion peut être limitée et déterminée par OPHIR ou par le magasin concerné."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-9-renseignements-destines-aux-consommateurs-et-conclusion-de-contrats-electroniques",
+              "title": "9. Renseignements destinés aux consommateurs et conclusion de contrats électroniques",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Avant la conclusion d'un abonnement payant, OPHIR fournira, ou l'interface d'achat concernée affichera, les renseignements essentiels, notamment l'identité du commerçant inscrit ou du vendeur, une description du Service, le prix, les paiements récurrents, les taxes, la fréquence de facturation, les modalités de paiement et d'"
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "annulation",
+                              "page": "cancellation"
+                          },
+                          {
+                              "type": "text",
+                              "text": " ainsi que les restrictions importantes. La dernière page de paiement du magasin et le reçu font partie du dossier de la transaction."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous acceptez de conclure des contrats et de recevoir les avis, reçus, renseignements et documents sous forme électronique, notamment par courriel, par message dans l'application, par publication sur le site ou dans l'interface du magasin. Vous devez maintenir une adresse courriel valide et disposer d'un appareil permettant de conserver ou d'imprimer les documents électroniques."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Pour les transactions assujetties aux règles québécoises relatives aux contrats à distance, les exigences impératives demeurent applicables, y compris celles concernant l'information précontractuelle, le contenu et la remise du contrat ainsi que les droits d'"
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "annulation",
+                              "page": "cancellation"
+                          },
+                          {
+                              "type": "text",
+                              "text": ". Les présentes Conditions n'ont pas pour objet de limiter ces droits."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Selon la plateforme et les circonstances, Apple ou Google peut être le commerçant inscrit ou l'intermédiaire de paiement. Pour l'administration du paiement, l'identité indiquée lors de l'achat et sur le reçu s'applique, sans modifier les obligations d'OPHIR relatives à la fourniture et à l'exploitation du Service."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-10-utilisation-acceptable",
+              "title": "10. Utilisation acceptable",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous pouvez utiliser le Service uniquement à des fins personnelles ou familiales légitimes et conformément aux présentes Conditions. Il vous est interdit :"
+                          }
+                      ]
+                  },
+                  {
+                      "type": "list",
+                      "items": [
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "d'accéder ou de tenter d'accéder sans autorisation au Service, au compte d'une autre personne, à un système connecté, au code source, aux contrôles de sécurité ou à des données non publiques;"
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "de contourner les mécanismes d'abonnement, les limites de débit, les mesures d'authentification, les restrictions géographiques ou les protections techniques;"
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "d'utiliser des scripts automatisés, des outils de collecte, des robots ou des méthodes semblables pour extraire des données ou interagir avec le Service, sauf au moyen d'interfaces expressément fournies par OPHIR;"
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "d'introduire des logiciels ou du code malveillants, de produire un trafic excessif ou de transmettre du contenu visant à perturber, endommager, tester ou compromettre le Service;"
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "de procéder à l'ingénierie inverse, à la décompilation ou au désassemblage, ou de tenter d'obtenir le code source, sauf dans les cas limités où la loi interdit de restreindre ces activités;"
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "d'utiliser le Service pour usurper une identité, faire une fausse déclaration d'autorité, commettre une fraude, blanchir de l'argent, éviter une obligation juridique ou violer les droits d'autrui;"
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "de téléverser des renseignements que vous n'êtes pas autorisé à utiliser ou qui ont été obtenus illégalement;"
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "de revendre, concéder en sous-licence, louer, exploiter commercialement ou fournir le Service à des tiers sans l'autorisation écrite d'OPHIR; ou"
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "d'utiliser les résultats du Service, sans autorisation écrite, pour créer, entraîner, évaluer comparativement ou améliorer un produit ou un modèle concurrent."
+                              }
+                          ]
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Nous pouvons enquêter sur une utilisation abusive présumée et prendre des mesures proportionnées, notamment limiter des fonctions, suspendre un compte, conserver les dossiers pertinents ou signaler un comportement lorsque la loi l'exige ou lorsque cela est raisonnablement nécessaire pour protéger les droits et la sécurité."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-11-votre-contenu-et-vos-instructions",
+              "title": "11. Votre Contenu et vos instructions",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "strong",
+                              "text": "Votre Contenu"
+                          },
+                          {
+                              "type": "text",
+                              "text": " désigne les renseignements que vous transmettez manuellement au Service, notamment les noms de comptes, les montants budgétaires, les notes, les objectifs, les paramètres familiaux, les corrections, les catégories et les demandes d'assistance. Il n'inclut pas les logiciels, la conception, les modèles, la documentation ni les autres éléments exclusifs d'OPHIR."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous conservez la propriété de Votre Contenu. Vous accordez à OPHIR une licence non exclusive, mondiale et libre de redevances lui permettant d'héberger, de reproduire, de traiter, d'organiser, de transformer, d'afficher, de transmettre et d'utiliser autrement Votre Contenu uniquement dans la mesure raisonnablement nécessaire pour fournir, protéger, maintenir, soutenir et améliorer le Service, respecter la loi et exercer les droits prévus par les présentes Conditions et la "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Politique de confidentialité",
+                              "page": "privacyPolicy"
+                          },
+                          {
+                              "type": "text",
+                              "text": "."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous confirmez détenir les droits et autorisations nécessaires pour fournir Votre Contenu et les instructions connexes. Vous êtes responsable de leur légalité et de leur exactitude. Nous pouvons supprimer ou limiter tout contenu qui contrevient aux présentes Conditions ou à la loi applicable."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "OPHIR peut utiliser, sans obligation ni rémunération, les commentaires, idées et suggestions que vous fournissez volontairement, à condition de ne pas vous identifier publiquement sans votre autorisation."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-12-protection-de-la-vie-privee-et-des-renseignements-personnels",
+              "title": "12. Protection de la vie privée et des renseignements personnels",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "La collecte, l'utilisation, la communication, la conservation et la protection des renseignements personnels sont décrites dans la "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Politique de confidentialité",
+                              "page": "privacyPolicy"
+                          },
+                          {
+                              "type": "text",
+                              "text": " d'OPHIR. Celle-ci fait partie du cadre général qui régit le Service, mais n'a pas pour objet de limiter les droits prévus par les lois applicables en matière de protection des renseignements personnels."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Comme OPHIR exerce ses activités à partir du Québec et sert des utilisateurs au Canada, plusieurs régimes peuvent s'appliquer selon la nature et le lieu du traitement, notamment les lois québécoises sur la protection des renseignements personnels dans le secteur privé et, lorsqu'elles s'appliquent, les exigences fédérales relatives aux activités commerciales interprovinciales ou internationales."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Aucun système de sécurité n'élimine tous les risques. Utilisez une protection robuste pour votre appareil, mettez rapidement les logiciels à jour, vérifiez l'activité de votre compte et signalez sans délai tout accès non autorisé présumé. OPHIR peut envoyer des communications relatives à la sécurité ou au fonctionnement du Service même si vous avez refusé les messages promotionnels."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Nous pouvons faire appel à des fournisseurs de services pour l'hébergement, l'analyse, la connexion de données financières, la transmission de communications, l'authentification, la prévention des abus et d'autres fonctions opérationnelles. Ces fournisseurs peuvent traiter des renseignements conformément aux obligations contractuelles et légales décrites dans la "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Politique de confidentialité",
+                              "page": "privacyPolicy"
+                          },
+                          {
+                              "type": "text",
+                              "text": "."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-13-propriete-intellectuelle-et-licence",
+              "title": "13. Propriété intellectuelle et licence",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Le Service, y compris les logiciels, l'interface, la conception visuelle, les textes, les éléments graphiques, les logos, les marques, la documentation, les taxonomies, les modèles, les méthodes de notation, les flux de travail et les compilations, appartient à OPHIR ou lui est concédé sous licence et est protégé par les lois applicables en matière de propriété intellectuelle."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Sous réserve du respect des présentes Conditions et du paiement des frais applicables, OPHIR vous accorde une licence limitée, personnelle, révocable, non exclusive, incessible et ne pouvant faire l'objet d'une sous-licence, afin d'installer et d'utiliser l'application et d'accéder au Service pour vos propres besoins personnels et familiaux pendant la période d'abonnement."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Aucun droit de propriété ne vous est transféré. Tous les droits qui ne sont pas expressément accordés sont réservés. Vous ne devez pas retirer les avis de propriété ni utiliser, sans autorisation écrite, le nom, les logos, les domaines ou les éléments de marque d'OPHIR d'une façon qui laisse entendre une commandite, une affiliation ou une approbation."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les noms et marques de tiers appartiennent à leurs propriétaires. La mention d'institutions financières, d'Apple, de Google, de Plaid ou d'autres fournisseurs ne signifie pas qu'ils approuvent OPHIR, sauf indication expresse contraire."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-14-plateformes-et-services-tiers",
+              "title": "14. Plateformes et services tiers",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Le Service peut dépendre de plateformes ou services tiers ou contenir des liens vers ceux-ci, notamment des magasins d'applications, des institutions financières, des agrégateurs de données, des fournisseurs infonuagiques, des services de cartographie, des fournisseurs d'analyse, des services de communication et des fonctions de systèmes d'exploitation. Votre utilisation d'un service tiers est régie par ses propres conditions et sa politique de confidentialité."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "OPHIR n'est pas responsable des actes, omissions, disponibilité, sécurité, exactitude, prix, politiques ou contenus de tiers, sauf lorsque la loi interdit d'exclure cette responsabilité. Une panne ou une modification des politiques d'un tiers peut toucher les fonctions du Service sans préavis."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Si vous avez téléchargé l'application à partir d'Apple, vous reconnaissez que les présentes Conditions sont conclues entre vous et OPHIR, et non avec Apple; OPHIR, et non Apple, est responsable du Service, de son entretien et de son assistance ainsi que des réclamations connexes, sous réserve des obligations d'Apple découlant des conditions de sa place de marché ou de la loi applicable. Si l'application a été téléchargée à partir de Google Play, son utilisation est également assujettie aux conditions applicables de Google Play. Dans chaque cas, le magasin d'applications et ses sociétés affiliées peuvent être des tiers bénéficiaires des dispositions destinées à les protéger lorsque leurs conditions le prévoient."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-15-modifications-disponibilite-et-entretien",
+              "title": "15. Modifications, disponibilité et entretien",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Nous pouvons mettre à jour, améliorer, remplacer, limiter ou supprimer des fonctions afin de maintenir la sécurité, de respecter la loi, de réagir aux changements apportés par des tiers, d'améliorer le rendement ou de faire évoluer le Service. Nous donnerons un avis lorsque la loi l'exige ou lorsqu'une modification importante porte préjudice à un abonnement payant en cours."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Le Service peut être indisponible pendant des travaux d'entretien, des pannes, des incidents de sécurité, des interruptions de réseau, des défaillances d'institutions financières ou des événements indépendants de notre volonté raisonnable. Nous ne garantissons pas un accès continu, un fonctionnement en temps réel ou l'absence d'erreurs."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Nous pouvons publier des mises à jour de l'application nécessaires à la sécurité, à la compatibilité ou au fonctionnement continu. Le défaut d'installer une mise à jour ou l'utilisation d'un appareil ou d'un système d'exploitation non pris en charge peut limiter des fonctions ou entraîner la perte d'accès."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Si une fonction payante importante est définitivement supprimée pendant une période prépayée, nous fournirons le recours exigé par la loi applicable et pourrons offrir une fonction de remplacement, un crédit ou une autre solution raisonnable."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-16-suspension-resiliation-et-suppression-du-compte",
+              "title": "16. Suspension, résiliation et suppression du compte",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous pouvez cesser d'utiliser le Service et demander la "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "suppression de votre compte",
+                              "page": "accountData"
+                          },
+                          {
+                              "type": "text",
+                              "text": " en tout temps au moyen des paramètres disponibles ou du service d'assistance. La fermeture du compte OPHIR n'annule pas automatiquement un abonnement dans l'App Store d'Apple ou Google Play; vous devez gérer cet abonnement dans le magasin concerné."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Nous pouvons suspendre ou résilier l'accès lorsque cela est raisonnablement nécessaire en raison d'un défaut de paiement, d'une fraude, d'une utilisation abusive, d'un risque de sécurité, d'une obligation légale, d'une longue période d'inactivité, d'une violation des présentes Conditions ou de l'arrêt du Service. Lorsque cela est approprié et exigé par la loi, nous donnerons un avis et offrirons une possibilité de corriger la violation."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "À la résiliation, la licence prend fin et vous devez cesser d'utiliser le Service. Les dispositions qui, par leur nature, doivent continuer de s'appliquer demeurent en vigueur, notamment celles concernant la propriété, les obligations de paiement déjà engagées, les exclusions de garanties, la responsabilité, le règlement des différends et l'interprétation."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "La suppression n'est pas toujours immédiate. Lorsque la loi le permet ou l'exige et conformément à la "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Politique de confidentialité",
+                              "page": "privacyPolicy"
+                          },
+                          {
+                              "type": "text",
+                              "text": ", certains renseignements peuvent être conservés pendant une période limitée dans les sauvegardes, les journaux de sécurité, les dossiers de transactions, les dossiers juridiques ou les systèmes de tiers. Les données irréversiblement dépersonnalisées peuvent ne plus être liées à votre compte."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-17-exclusions-de-garanties",
+              "title": "17. Exclusions de garanties",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "strong",
+                              "text": "DANS TOUTE LA MESURE PERMISE PAR LA LOI APPLICABLE, LE SERVICE EST FOURNI « TEL QUEL » ET « SELON SA DISPONIBILITÉ ». OPHIR NE GARANTIT PAS QUE LE SERVICE SERA TOUJOURS DISPONIBLE, SÉCURITAIRE, EXACT, COMPLET, À JOUR OU ADAPTÉ À UNE FIN PARTICULIÈRE."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "strong",
+                              "text": "OPHIR EXCLUT LES GARANTIES ET CONDITIONS IMPLICITES DANS LA MESURE OÙ LA LOI LE PERMET, Y COMPRIS LES GARANTIES IMPLICITES DE QUALITÉ MARCHANDE, D'ADAPTATION À UNE FIN PARTICULIÈRE, DE TITRE, DE JOUISSANCE PAISIBLE ET D'ABSENCE DE CONTREFAÇON."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "strong",
+                              "text": "OPHIR NE GARANTIT NI L'EXACTITUDE NI LA DISPONIBILITÉ DES DONNÉES FOURNIES PAR UNE INSTITUTION FINANCIÈRE OU UN FOURNISSEUR TIERS, NI QU'UNE PRÉVISION, UNE RECOMMANDATION, UNE CATÉGORIE, UNE ALERTE OU UN AUTRE RÉSULTAT PRODUIRA UN RÉSULTAT FINANCIER PARTICULIER."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Aucune disposition du présent article n'exclut une garantie légale, une protection du consommateur ou un autre droit qui ne peut être exclu en vertu de la loi applicable. En particulier, les présentes Conditions ne limitent pas les garanties impératives offertes aux consommateurs au Québec ou ailleurs au Canada."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-18-limitation-de-responsabilite",
+              "title": "18. Limitation de responsabilité",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "strong",
+                              "text": "DANS TOUTE LA MESURE PERMISE PAR LA LOI, OPHIR N'EST PAS RESPONSABLE DES DOMMAGES INDIRECTS, ACCESSOIRES, PARTICULIERS, CONSÉCUTIFS, EXEMPLAIRES OU PUNITIFS, NI DES PERTES DE PROFITS, D'ÉPARGNE OU D'OCCASIONS, DE LA PERTE DE DONNÉES OU DE RÉPUTATION, OU D'UNE INTERRUPTION D'ACTIVITÉ DÉCOULANT DU SERVICE OU S'Y RAPPORTANT, MÊME SI OPHIR A ÉTÉ INFORMÉ DE LA POSSIBILITÉ D'UNE TELLE PERTE."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "strong",
+                              "text": "DANS TOUTE LA MESURE PERMISE PAR LA LOI, LA RESPONSABILITÉ GLOBALE D'OPHIR POUR L'ENSEMBLE DES RÉCLAMATIONS DÉCOULANT DU SERVICE, DES PRÉSENTES CONDITIONS OU S'Y RAPPORTANT NE DÉPASSE PAS LE PLUS ÉLEVÉ DES MONTANTS SUIVANTS : (A) LE MONTANT QUE VOUS AVEZ PAYÉ POUR UN ABONNEMENT OPHIR AU COURS DES DOUZE MOIS PRÉCÉDANT L'ÉVÉNEMENT À L'ORIGINE DE LA RÉCLAMATION; ET (B) 100 DOLLARS CANADIENS."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les limites du présent article ne s'appliquent pas à la fraude, à la faute intentionnelle, à la faute lourde lorsqu'elle ne peut être limitée, au préjudice corporel ou moral, à la violation de droits inaliénables ni à toute autre responsabilité que la loi applicable interdit d'exclure ou de limiter."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Vous reconnaissez que le prix de l'abonnement tient compte de la répartition des risques prévue par les présentes Conditions. Si une limite est jugée inexécutoire, elle s'appliquera dans toute la mesure permise par la loi et les autres dispositions demeureront en vigueur."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-19-droit-applicable-et-differends",
+              "title": "19. Droit applicable et différends",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les présentes Conditions et la relation entre vous et OPHIR sont régies par les lois de la province de Québec et les lois fédérales du Canada qui s'y appliquent, sans égard aux règles de conflit de lois, sauf lorsqu'une règle impérative exige un autre résultat."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Avant d'intenter une procédure officielle, vous et OPHIR êtes encouragés à tenter de bonne foi de régler la question en communiquant avec l'autre partie et en fournissant une description raisonnable du problème et du règlement recherché. Vous pouvez joindre OPHIR à "
+                          },
+                          {
+                              "type": "emailLink",
+                              "text": "contact@joinophir.app",
+                              "email": "contact@joinophir.app"
+                          },
+                          {
+                              "type": "text",
+                              "text": "."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Tout différend qui n'est pas réglé de manière informelle peut être soumis à un tribunal compétent. Aucune disposition des présentes Conditions n'oblige un consommateur québécois à soumettre un différend futur à un arbitrage obligatoire, à renoncer à un recours collectif ni à abandonner un droit procédural ou substantiel auquel la loi ne permet pas de renoncer. L'arbitrage ne peut être utilisé qu'en vertu d'un accord valide conclu après la naissance du différend ou dans un autre cas permis par la loi."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "La Convention des Nations Unies sur les contrats de vente internationale de marchandises ne s'applique pas aux présentes Conditions."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-20-modifications-des-presentes-conditions",
+              "title": "20. Modifications des présentes Conditions",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Nous pouvons modifier les présentes Conditions afin de tenir compte de changements apportés au Service, à la loi, aux pratiques de sécurité, à l'entreprise ou aux exigences de tiers. La version modifiée indiquera sa date d'entrée en vigueur."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Nous donnerons avis d'une modification importante par un moyen raisonnablement conçu pour vous joindre, par exemple une notification dans l'application, un courriel, un avis sur le site ou une mise à jour dans le magasin, et obtiendrons votre consentement lorsque la loi l'exige. Les modifications ne s'appliqueront pas rétroactivement et ne réduiront pas des droits déjà acquis, sauf lorsque la loi le permet et que vous l'acceptez expressément."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Si vous refusez la version modifiée, cessez d'utiliser la partie concernée du Service et annulez votre abonnement avant l'entrée en vigueur de la modification. La poursuite de l'utilisation après une date d'entrée en vigueur dûment communiquée constitue une acceptation uniquement dans la mesure permise par la loi."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-21-dispositions-generales",
+              "title": "21. Dispositions générales",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les présentes Conditions, la "
+                          },
+                          {
+                              "type": "internalLink",
+                              "text": "Politique de confidentialité",
+                              "page": "privacyPolicy"
+                          },
+                          {
+                              "type": "text",
+                              "text": ", les renseignements applicables relatifs à l'achat et les conditions particulières des fonctions qui vous sont communiquées constituent l'accord concernant le Service. En cas de divergence entre les conditions particulières d'une fonction et les présentes Conditions, les conditions particulières s'appliquent à cette fonction, sous réserve de la loi impérative."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Si une disposition est jugée invalide ou inexécutoire, elle sera interprétée ou modifiée dans la mesure minimale nécessaire pour la rendre exécutoire, et les autres dispositions demeureront en vigueur."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Le fait de ne pas appliquer une disposition ne constitue pas une renonciation à celle-ci. Vous ne pouvez céder ni transférer vos droits ou obligations sans notre consentement écrit. OPHIR peut transférer l'accord dans le cadre d'une réorganisation, d'un financement, d'une vente d'actifs ou d'un transfert du Service, sous réserve de la loi applicable et des obligations de confidentialité."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Les titres ne servent qu'à faciliter la lecture. Le terme « notamment » signifie « notamment, sans s'y limiter ». OPHIR peut utiliser la version anglaise comme version administrative principale aux fins de la préparation de versions localisées. Aucune disposition des présentes Conditions ne limite les droits accordés par la Charte de la langue française ou par une autre loi linguistique impérative, notamment les exigences relatives à la remise et au maintien d'une version française lorsqu'elles s'appliquent."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Aucune partie n'est responsable d'un retard causé par un événement indépendant de sa volonté raisonnable, sans toutefois que cela libère une partie d'une obligation de paiement déjà échue ni d'une autre obligation à laquelle la loi ne permet pas de se soustraire."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "section-22-coordonnees",
+              "title": "22. Coordonnées",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Exploitant d'OPHIR :"
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Soavinjato Andrianarisoa\n1203 Rue Normont\nLaval (Québec) H7G 3H3\nCanada"
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Demandes générales et juridiques : "
+                          },
+                          {
+                              "type": "emailLink",
+                              "text": "contact@joinophir.app",
+                              "email": "contact@joinophir.app"
+                          },
+                          {
+                              "type": "text",
+                              "text": "\nService à la clientèle : "
+                          },
+                          {
+                              "type": "emailLink",
+                              "text": "support@joinophir.app",
+                              "email": "support@joinophir.app"
+                          },
+                          {
+                              "type": "text",
+                              "text": "\nDemandes relatives à la protection des renseignements personnels : "
+                          },
+                          {
+                              "type": "emailLink",
+                              "text": "privacy@joinophir.app",
+                              "email": "privacy@joinophir.app"
+                          },
+                          {
+                              "type": "text",
+                              "text": "\nRenseignements généraux : "
+                          },
+                          {
+                              "type": "emailLink",
+                              "text": "hello@joinophir.app",
+                              "email": "hello@joinophir.app"
+                          }
+                      ]
+                  },
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Lorsque vous communiquez avec nous au sujet d'un compte, n'envoyez pas de mot de passe de services bancaires en ligne, de numéro complet de carte de paiement, de code d'authentification à usage unique ni d'autres identifiants."
+                          }
+                      ]
+                  }
+              ]
+          },
+          {
+              "key": "annexe-a-liste-de-controle-des-renseignements-relatifs-a-l-abonnement",
+              "title": "Annexe A - Liste de contrôle des renseignements relatifs à l'abonnement",
+              "blocks": [
+                  {
+                      "type": "paragraph",
+                      "content": [
+                          {
+                              "type": "text",
+                              "text": "Avant que l'utilisateur confirme un abonnement, les renseignements suivants doivent être clairement présentés au cours du processus d'achat dans l'App Store d'Apple ou Google Play et dans tout avis connexe affiché dans l'application. Cette liste vise à faciliter la mise en œuvre et n'impose aucune obligation supplémentaire à l'utilisateur."
+                          }
+                      ]
+                  },
+                  {
+                      "type": "list",
+                      "items": [
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "Le nom et les coordonnées du vendeur ou de l'exploitant du Service, y compris un numéro de téléphone lorsque les règles québécoises sur les contrats à distance l'exigent."
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "Une description claire de l'abonnement et des fonctions incluses."
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "Le prix, la devise, les taxes applicables, la fréquence de facturation et le montant total du paiement récurrent."
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "La durée et les conditions d'une période d'essai gratuite ou promotionnelle."
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "Un avis concernant le renouvellement automatique et le moment où l'abonnement sera renouvelé."
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "Les instructions d'"
+                              },
+                              {
+                                  "type": "internalLink",
+                                  "text": "annulation",
+                                  "page": "cancellation"
+                              },
+                              {
+                                  "type": "text",
+                                  "text": " dans le magasin concerné."
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "Les renseignements sur les remboursements et les plaintes, sans limitation des droits prévus par la loi."
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "Une copie durable ou un reçu que le consommateur peut conserver et imprimer lorsque cela est requis."
+                              }
+                          ],
+                          [
+                              {
+                                  "type": "text",
+                                  "text": "Des liens vers les présentes Conditions et la "
+                              },
+                              {
+                                  "type": "internalLink",
+                                  "text": "Politique de confidentialité",
+                                  "page": "privacyPolicy"
+                              },
+                              {
+                                  "type": "text",
+                                  "text": " avant l'achat."
+                              }
+                          ]
+                      ]
+                  }
+              ]
+          }
+      ]
+  },
   ru: {
     title: "Условия использования",
     seoTitle: "Условия использования | OPHIR",
@@ -1201,6 +2736,6 @@ export const termsOfServiceContent = {
     ]
   }
 } satisfies Record<
-  "en" | "ru",
+  "en" | "fr" | "ru",
   TermsOfServiceDocument
 >;

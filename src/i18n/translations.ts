@@ -870,7 +870,7 @@ export const translations = {
         ...privacyPolicyContent.fr,
       },
       termsOfService: {
-        title: "Conditions d'utilisation",
+        ...termsOfServiceContent.fr,
       },
       cookiePolicy: {
         title: "Politique d'utilisation des cookies",
