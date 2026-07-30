@@ -5,6 +5,7 @@ import { cancellationContent } from "./cancellation";
 import { contactContent } from "./contact";
 import { faqContent } from "./faq";
 import { privacyPolicyContent } from "./privacy-policy";
+import { securityContent } from "./security";
 import { subscriptionContent } from "./subscription";
 import { supportContent } from "./support";
 import { termsOfServiceContent } from "./terms-of-service";
@@ -78,7 +79,7 @@ export const translations = {
         title: "Trust",
       },
       security: {
-        title: "Security",
+        ...securityContent.en,
       },
       data: {
         title: "Data",
@@ -841,7 +842,7 @@ export const translations = {
         title: "Trust",
       },
       security: {
-        title: "Sécurité",
+        ...securityContent.fr,
       },
       data: {
         title: "Données",
@@ -1608,7 +1609,7 @@ export const translations = {
         title: "Надёжность",
       },
       security: {
-        title: "Безопасность",
+        ...securityContent.ru,
       },
       data: {
         title: "Данные",
