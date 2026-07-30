@@ -1,6 +1,7 @@
 import type { Locale } from "./config";
 import { aboutContent } from "./about";
 import { accountDataContent } from "./account-data";
+import { appTechnologiesContent } from "./app-technologies";
 import { cancellationContent } from "./cancellation";
 import { contactContent } from "./contact";
 import { faqContent } from "./faq";
@@ -112,7 +113,7 @@ export const translations = {
         title: "Cookie Policy",
       },
       appTechnologies: {
-        title: "Application Technologies and Cookies",
+        ...appTechnologiesContent.en,
       },
       accessibility: {
         title: "Accessibility",
@@ -875,7 +876,7 @@ export const translations = {
         title: "Politique d'utilisation des cookies",
       },
       appTechnologies: {
-        title: "Technologies d'application et cookies",
+        ...appTechnologiesContent.fr,
       },
       accessibility: {
         title: "Accessibilité",
@@ -1642,7 +1643,7 @@ export const translations = {
         title: "Политика cookie",
       },
       appTechnologies: {
-        title: "Технологии приложения и cookie",
+        ...appTechnologiesContent.ru,
       },
       accessibility: {
         title: "Доступность",
