@@ -1,4 +1,5 @@
 import type { Locale } from "./config";
+import { accessibilityContent } from "./accessibility";
 import { aboutContent } from "./about";
 import { accountDataContent } from "./account-data";
 import { appTechnologiesContent } from "./app-technologies";
@@ -116,7 +117,7 @@ export const translations = {
         ...appTechnologiesContent.en,
       },
       accessibility: {
-        title: "Accessibility",
+        ...accessibilityContent.en,
       },
     },
 
@@ -879,7 +880,7 @@ export const translations = {
         ...appTechnologiesContent.fr,
       },
       accessibility: {
-        title: "Accessibilité",
+        ...accessibilityContent.fr,
       },
     },
 
@@ -1646,7 +1647,7 @@ export const translations = {
         ...appTechnologiesContent.ru,
       },
       accessibility: {
-        title: "Доступность",
+        ...accessibilityContent.ru,
       },
     },
 
