@@ -1,5 +1,6 @@
 import type { Locale } from "./config";
 import { aboutContent } from "./about";
+import { cancellationContent } from "./cancellation";
 import { contactContent } from "./contact";
 import { faqContent } from "./faq";
 import { privacyPolicyContent } from "./privacy-policy";
@@ -94,7 +95,7 @@ export const translations = {
         ...subscriptionContent.en,
       },
       cancellation: {
-        title: "Cancellation and Refunds",
+        ...cancellationContent.en,
       },
       accountData: {
         title: "Account Deletion and Data Requests",
@@ -857,7 +858,7 @@ export const translations = {
         ...subscriptionContent.fr,
       },
       cancellation: {
-        title: "Annulation et remboursements",
+        ...cancellationContent.fr,
       },
       accountData: {
         title: "Suppression de compte et demandes de données",
@@ -1624,7 +1625,7 @@ export const translations = {
         ...subscriptionContent.ru,
       },
       cancellation: {
-        title: "Отмена подписки и возвраты",
+        ...cancellationContent.ru,
       },
       accountData: {
         title: "Удаление аккаунта и запросы о данных",
